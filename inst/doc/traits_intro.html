@@ -1,0 +1,635 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+
+<title><code>traits</code> introduction</title>
+
+<script type="text/javascript">
+window.onload = function() {
+  var imgs = document.getElementsByTagName('img'), i, img;
+  for (i = 0; i < imgs.length; i++) {
+    img = imgs[i];
+    // center an image if it is the only element of its parent
+    if (img.parentElement.childElementCount === 1)
+      img.parentElement.style.textAlign = 'center';
+  }
+};
+</script>
+
+<!-- Styles for R syntax highlighter -->
+<style type="text/css">
+   pre .operator,
+   pre .paren {
+     color: rgb(104, 118, 135)
+   }
+
+   pre .literal {
+     color: #990073
+   }
+
+   pre .number {
+     color: #099;
+   }
+
+   pre .comment {
+     color: #998;
+     font-style: italic
+   }
+
+   pre .keyword {
+     color: #900;
+     font-weight: bold
+   }
+
+   pre .identifier {
+     color: rgb(0, 0, 0);
+   }
+
+   pre .string {
+     color: #d14;
+   }
+</style>
+
+<!-- R syntax highlighter -->
+<script type="text/javascript">
+var hljs=new function(){function m(p){return p.replace(/&/gm,"&amp;").replace(/</gm,"&lt;")}function f(r,q,p){return RegExp(q,"m"+(r.cI?"i":"")+(p?"g":""))}function b(r){for(var p=0;p<r.childNodes.length;p++){var q=r.childNodes[p];if(q.nodeName=="CODE"){return q}if(!(q.nodeType==3&&q.nodeValue.match(/\s+/))){break}}}function h(t,s){var p="";for(var r=0;r<t.childNodes.length;r++){if(t.childNodes[r].nodeType==3){var q=t.childNodes[r].nodeValue;if(s){q=q.replace(/\n/g,"")}p+=q}else{if(t.childNodes[r].nodeName=="BR"){p+="\n"}else{p+=h(t.childNodes[r])}}}if(/MSIE [678]/.test(navigator.userAgent)){p=p.replace(/\r/g,"\n")}return p}function a(s){var r=s.className.split(/\s+/);r=r.concat(s.parentNode.className.split(/\s+/));for(var q=0;q<r.length;q++){var p=r[q].replace(/^language-/,"");if(e[p]){return p}}}function c(q){var p=[];(function(s,t){for(var r=0;r<s.childNodes.length;r++){if(s.childNodes[r].nodeType==3){t+=s.childNodes[r].nodeValue.length}else{if(s.childNodes[r].nodeName=="BR"){t+=1}else{if(s.childNodes[r].nodeType==1){p.push({event:"start",offset:t,node:s.childNodes[r]});t=arguments.callee(s.childNodes[r],t);p.push({event:"stop",offset:t,node:s.childNodes[r]})}}}}return t})(q,0);return p}function k(y,w,x){var q=0;var z="";var s=[];function u(){if(y.length&&w.length){if(y[0].offset!=w[0].offset){return(y[0].offset<w[0].offset)?y:w}else{return w[0].event=="start"?y:w}}else{return y.length?y:w}}function t(D){var A="<"+D.nodeName.toLowerCase();for(var B=0;B<D.attributes.length;B++){var C=D.attributes[B];A+=" "+C.nodeName.toLowerCase();if(C.value!==undefined&&C.value!==false&&C.value!==null){A+='="'+m(C.value)+'"'}}return A+">"}while(y.length||w.length){var v=u().splice(0,1)[0];z+=m(x.substr(q,v.offset-q));q=v.offset;if(v.event=="start"){z+=t(v.node);s.push(v.node)}else{if(v.event=="stop"){var p,r=s.length;do{r--;p=s[r];z+=("</"+p.nodeName.toLowerCase()+">")}while(p!=v.node);s.splice(r,1);while(r<s.length){z+=t(s[r]);r++}}}}return z+m(x.substr(q))}function j(){function q(x,y,v){if(x.compiled){return}var u;var s=[];if(x.k){x.lR=f(y,x.l||hljs.IR,true);for(var w in x.k){if(!x.k.hasOwnProperty(w)){continue}if(x.k[w] instanceof Object){u=x.k[w]}else{u=x.k;w="keyword"}for(var r in u){if(!u.hasOwnProperty(r)){continue}x.k[r]=[w,u[r]];s.push(r)}}}if(!v){if(x.bWK){x.b="\\b("+s.join("|")+")\\s"}x.bR=f(y,x.b?x.b:"\\B|\\b");if(!x.e&&!x.eW){x.e="\\B|\\b"}if(x.e){x.eR=f(y,x.e)}}if(x.i){x.iR=f(y,x.i)}if(x.r===undefined){x.r=1}if(!x.c){x.c=[]}x.compiled=true;for(var t=0;t<x.c.length;t++){if(x.c[t]=="self"){x.c[t]=x}q(x.c[t],y,false)}if(x.starts){q(x.starts,y,false)}}for(var p in e){if(!e.hasOwnProperty(p)){continue}q(e[p].dM,e[p],true)}}function d(B,C){if(!j.called){j();j.called=true}function q(r,M){for(var L=0;L<M.c.length;L++){if((M.c[L].bR.exec(r)||[null])[0]==r){return M.c[L]}}}function v(L,r){if(D[L].e&&D[L].eR.test(r)){return 1}if(D[L].eW){var M=v(L-1,r);return M?M+1:0}return 0}function w(r,L){return L.i&&L.iR.test(r)}function K(N,O){var M=[];for(var L=0;L<N.c.length;L++){M.push(N.c[L].b)}var r=D.length-1;do{if(D[r].e){M.push(D[r].e)}r--}while(D[r+1].eW);if(N.i){M.push(N.i)}return f(O,M.join("|"),true)}function p(M,L){var N=D[D.length-1];if(!N.t){N.t=K(N,E)}N.t.lastIndex=L;var r=N.t.exec(M);return r?[M.substr(L,r.index-L),r[0],false]:[M.substr(L),"",true]}function z(N,r){var L=E.cI?r[0].toLowerCase():r[0];var M=N.k[L];if(M&&M instanceof Array){return M}return false}function F(L,P){L=m(L);if(!P.k){return L}var r="";var O=0;P.lR.lastIndex=0;var M=P.lR.exec(L);while(M){r+=L.substr(O,M.index-O);var N=z(P,M);if(N){x+=N[1];r+='<span class="'+N[0]+'">'+M[0]+"</span>"}else{r+=M[0]}O=P.lR.lastIndex;M=P.lR.exec(L)}return r+L.substr(O,L.length-O)}function J(L,M){if(M.sL&&e[M.sL]){var r=d(M.sL,L);x+=r.keyword_count;return r.value}else{return F(L,M)}}function I(M,r){var L=M.cN?'<span class="'+M.cN+'">':"";if(M.rB){y+=L;M.buffer=""}else{if(M.eB){y+=m(r)+L;M.buffer=""}else{y+=L;M.buffer=r}}D.push(M);A+=M.r}function G(N,M,Q){var R=D[D.length-1];if(Q){y+=J(R.buffer+N,R);return false}var P=q(M,R);if(P){y+=J(R.buffer+N,R);I(P,M);return P.rB}var L=v(D.length-1,M);if(L){var O=R.cN?"</span>":"";if(R.rE){y+=J(R.buffer+N,R)+O}else{if(R.eE){y+=J(R.buffer+N,R)+O+m(M)}else{y+=J(R.buffer+N+M,R)+O}}while(L>1){O=D[D.length-2].cN?"</span>":"";y+=O;L--;D.length--}var r=D[D.length-1];D.length--;D[D.length-1].buffer="";if(r.starts){I(r.starts,"")}return R.rE}if(w(M,R)){throw"Illegal"}}var E=e[B];var D=[E.dM];var A=0;var x=0;var y="";try{var s,u=0;E.dM.buffer="";do{s=p(C,u);var t=G(s[0],s[1],s[2]);u+=s[0].length;if(!t){u+=s[1].length}}while(!s[2]);if(D.length>1){throw"Illegal"}return{r:A,keyword_count:x,value:y}}catch(H){if(H=="Illegal"){return{r:0,keyword_count:0,value:m(C)}}else{throw H}}}function g(t){var p={keyword_count:0,r:0,value:m(t)};var r=p;for(var q in e){if(!e.hasOwnProperty(q)){continue}var s=d(q,t);s.language=q;if(s.keyword_count+s.r>r.keyword_count+r.r){r=s}if(s.keyword_count+s.r>p.keyword_count+p.r){r=p;p=s}}if(r.language){p.second_best=r}return p}function i(r,q,p){if(q){r=r.replace(/^((<[^>]+>|\t)+)/gm,function(t,w,v,u){return w.replace(/\t/g,q)})}if(p){r=r.replace(/\n/g,"<br>")}return r}function n(t,w,r){var x=h(t,r);var v=a(t);var y,s;if(v){y=d(v,x)}else{return}var q=c(t);if(q.length){s=document.createElement("pre");s.innerHTML=y.value;y.value=k(q,c(s),x)}y.value=i(y.value,w,r);var u=t.className;if(!u.match("(\\s|^)(language-)?"+v+"(\\s|$)")){u=u?(u+" "+v):v}if(/MSIE [678]/.test(navigator.userAgent)&&t.tagName=="CODE"&&t.parentNode.tagName=="PRE"){s=t.parentNode;var p=document.createElement("div");p.innerHTML="<pre><code>"+y.value+"</code></pre>";t=p.firstChild.firstChild;p.firstChild.cN=s.cN;s.parentNode.replaceChild(p.firstChild,s)}else{t.innerHTML=y.value}t.className=u;t.result={language:v,kw:y.keyword_count,re:y.r};if(y.second_best){t.second_best={language:y.second_best.language,kw:y.second_best.keyword_count,re:y.second_best.r}}}function o(){if(o.called){return}o.called=true;var r=document.getElementsByTagName("pre");for(var p=0;p<r.length;p++){var q=b(r[p]);if(q){n(q,hljs.tabReplace)}}}function l(){if(window.addEventListener){window.addEventListener("DOMContentLoaded",o,false);window.addEventListener("load",o,false)}else{if(window.attachEvent){window.attachEvent("onload",o)}else{window.onload=o}}}var e={};this.LANGUAGES=e;this.highlight=d;this.highlightAuto=g;this.fixMarkup=i;this.highlightBlock=n;this.initHighlighting=o;this.initHighlightingOnLoad=l;this.IR="[a-zA-Z][a-zA-Z0-9_]*";this.UIR="[a-zA-Z_][a-zA-Z0-9_]*";this.NR="\\b\\d+(\\.\\d+)?";this.CNR="\\b(0[xX][a-fA-F0-9]+|(\\d+(\\.\\d*)?|\\.\\d+)([eE][-+]?\\d+)?)";this.BNR="\\b(0b[01]+)";this.RSR="!|!=|!==|%|%=|&|&&|&=|\\*|\\*=|\\+|\\+=|,|\\.|-|-=|/|/=|:|;|<|<<|<<=|<=|=|==|===|>|>=|>>|>>=|>>>|>>>=|\\?|\\[|\\{|\\(|\\^|\\^=|\\||\\|=|\\|\\||~";this.ER="(?![\\s\\S])";this.BE={b:"\\\\.",r:0};this.ASM={cN:"string",b:"'",e:"'",i:"\\n",c:[this.BE],r:0};this.QSM={cN:"string",b:'"',e:'"',i:"\\n",c:[this.BE],r:0};this.CLCM={cN:"comment",b:"//",e:"$"};this.CBLCLM={cN:"comment",b:"/\\*",e:"\\*/"};this.HCM={cN:"comment",b:"#",e:"$"};this.NM={cN:"number",b:this.NR,r:0};this.CNM={cN:"number",b:this.CNR,r:0};this.BNM={cN:"number",b:this.BNR,r:0};this.inherit=function(r,s){var p={};for(var q in r){p[q]=r[q]}if(s){for(var q in s){p[q]=s[q]}}return p}}();hljs.LANGUAGES.cpp=function(){var a={keyword:{"false":1,"int":1,"float":1,"while":1,"private":1,"char":1,"catch":1,"export":1,virtual:1,operator:2,sizeof:2,dynamic_cast:2,typedef:2,const_cast:2,"const":1,struct:1,"for":1,static_cast:2,union:1,namespace:1,unsigned:1,"long":1,"throw":1,"volatile":2,"static":1,"protected":1,bool:1,template:1,mutable:1,"if":1,"public":1,friend:2,"do":1,"return":1,"goto":1,auto:1,"void":2,"enum":1,"else":1,"break":1,"new":1,extern:1,using:1,"true":1,"class":1,asm:1,"case":1,typeid:1,"short":1,reinterpret_cast:2,"default":1,"double":1,register:1,explicit:1,signed:1,typename:1,"try":1,"this":1,"switch":1,"continue":1,wchar_t:1,inline:1,"delete":1,alignof:1,char16_t:1,char32_t:1,constexpr:1,decltype:1,noexcept:1,nullptr:1,static_assert:1,thread_local:1,restrict:1,_Bool:1,complex:1},built_in:{std:1,string:1,cin:1,cout:1,cerr:1,clog:1,stringstream:1,istringstream:1,ostringstream:1,auto_ptr:1,deque:1,list:1,queue:1,stack:1,vector:1,map:1,set:1,bitset:1,multiset:1,multimap:1,unordered_set:1,unordered_map:1,unordered_multiset:1,unordered_multimap:1,array:1,shared_ptr:1}};return{dM:{k:a,i:"</",c:[hljs.CLCM,hljs.CBLCLM,hljs.QSM,{cN:"string",b:"'\\\\?.",e:"'",i:"."},{cN:"number",b:"\\b(\\d+(\\.\\d*)?|\\.\\d+)(u|U|l|L|ul|UL|f|F)"},hljs.CNM,{cN:"preprocessor",b:"#",e:"$"},{cN:"stl_container",b:"\\b(deque|list|queue|stack|vector|map|set|bitset|multiset|multimap|unordered_map|unordered_set|unordered_multiset|unordered_multimap|array)\\s*<",e:">",k:a,r:10,c:["self"]}]}}}();hljs.LANGUAGES.r={dM:{c:[hljs.HCM,{cN:"number",b:"\\b0[xX][0-9a-fA-F]+[Li]?\\b",e:hljs.IMMEDIATE_RE,r:0},{cN:"number",b:"\\b\\d+(?:[eE][+\\-]?\\d*)?L\\b",e:hljs.IMMEDIATE_RE,r:0},{cN:"number",b:"\\b\\d+\\.(?!\\d)(?:i\\b)?",e:hljs.IMMEDIATE_RE,r:1},{cN:"number",b:"\\b\\d+(?:\\.\\d*)?(?:[eE][+\\-]?\\d*)?i?\\b",e:hljs.IMMEDIATE_RE,r:0},{cN:"number",b:"\\.\\d+(?:[eE][+\\-]?\\d*)?i?\\b",e:hljs.IMMEDIATE_RE,r:1},{cN:"keyword",b:"(?:tryCatch|library|setGeneric|setGroupGeneric)\\b",e:hljs.IMMEDIATE_RE,r:10},{cN:"keyword",b:"\\.\\.\\.",e:hljs.IMMEDIATE_RE,r:10},{cN:"keyword",b:"\\.\\.\\d+(?![\\w.])",e:hljs.IMMEDIATE_RE,r:10},{cN:"keyword",b:"\\b(?:function)",e:hljs.IMMEDIATE_RE,r:2},{cN:"keyword",b:"(?:if|in|break|next|repeat|else|for|return|switch|while|try|stop|warning|require|attach|detach|source|setMethod|setClass)\\b",e:hljs.IMMEDIATE_RE,r:1},{cN:"literal",b:"(?:NA|NA_integer_|NA_real_|NA_character_|NA_complex_)\\b",e:hljs.IMMEDIATE_RE,r:10},{cN:"literal",b:"(?:NULL|TRUE|FALSE|T|F|Inf|NaN)\\b",e:hljs.IMMEDIATE_RE,r:1},{cN:"identifier",b:"[a-zA-Z.][a-zA-Z0-9._]*\\b",e:hljs.IMMEDIATE_RE,r:0},{cN:"operator",b:"<\\-(?!\\s*\\d)",e:hljs.IMMEDIATE_RE,r:2},{cN:"operator",b:"\\->|<\\-",e:hljs.IMMEDIATE_RE,r:1},{cN:"operator",b:"%%|~",e:hljs.IMMEDIATE_RE},{cN:"operator",b:">=|<=|==|!=|\\|\\||&&|=|\\+|\\-|\\*|/|\\^|>|<|!|&|\\||\\$|:",e:hljs.IMMEDIATE_RE,r:0},{cN:"operator",b:"%",e:"%",i:"\\n",r:1},{cN:"identifier",b:"`",e:"`",r:0},{cN:"string",b:'"',e:'"',c:[hljs.BE],r:0},{cN:"string",b:"'",e:"'",c:[hljs.BE],r:0},{cN:"paren",b:"[[({\\])}]",e:hljs.IMMEDIATE_RE,r:0}]}};
+hljs.initHighlightingOnLoad();
+</script>
+
+
+
+<style type="text/css">
+body, td {
+   font-family: sans-serif;
+   background-color: white;
+   font-size: 13px;
+}
+
+body {
+  max-width: 800px;
+  margin: auto;
+  padding: 1em;
+  line-height: 20px;
+}
+
+tt, code, pre {
+   font-family: 'DejaVu Sans Mono', 'Droid Sans Mono', 'Lucida Console', Consolas, Monaco, monospace;
+}
+
+h1 {
+   font-size:2.2em;
+}
+
+h2 {
+   font-size:1.8em;
+}
+
+h3 {
+   font-size:1.4em;
+}
+
+h4 {
+   font-size:1.0em;
+}
+
+h5 {
+   font-size:0.9em;
+}
+
+h6 {
+   font-size:0.8em;
+}
+
+a:visited {
+   color: rgb(50%, 0%, 50%);
+}
+
+pre, img {
+  max-width: 100%;
+}
+pre {
+  overflow-x: auto;
+}
+pre code {
+   display: block; padding: 0.5em;
+}
+
+code {
+  font-size: 92%;
+  border: 1px solid #ccc;
+}
+
+code[class] {
+  background-color: #F8F8F8;
+}
+
+table, td, th {
+  border: none;
+}
+
+blockquote {
+   color:#666666;
+   margin:0;
+   padding-left: 1em;
+   border-left: 0.5em #EEE solid;
+}
+
+hr {
+   height: 0px;
+   border-bottom: none;
+   border-top-width: thin;
+   border-top-style: dotted;
+   border-top-color: #999999;
+}
+
+@media print {
+   * {
+      background: transparent !important;
+      color: black !important;
+      filter:none !important;
+      -ms-filter: none !important;
+   }
+
+   body {
+      font-size:12pt;
+      max-width:100%;
+   }
+
+   a, a:visited {
+      text-decoration: underline;
+   }
+
+   hr {
+      visibility: hidden;
+      page-break-before: always;
+   }
+
+   pre, blockquote {
+      padding-right: 1em;
+      page-break-inside: avoid;
+   }
+
+   tr, img {
+      page-break-inside: avoid;
+   }
+
+   img {
+      max-width: 100% !important;
+   }
+
+   @page :left {
+      margin: 15mm 20mm 15mm 10mm;
+   }
+
+   @page :right {
+      margin: 15mm 10mm 15mm 20mm;
+   }
+
+   p, h2, h3 {
+      orphans: 3; widows: 3;
+   }
+
+   h2, h3 {
+      page-break-after: avoid;
+   }
+}
+</style>
+
+
+
+</head>
+
+<body>
+<!--
+%\VignetteEngine{knitr::knitr}
+%\VignetteIndexEntry{traits Intro}
+%\VignetteEncoding{UTF-8}
+-->
+
+<h1><code>traits</code> introduction</h1>
+
+<pre><code class="r">library(&quot;traits&quot;)
+</code></pre>
+
+<h2>BetyDB</h2>
+
+<p>Get trait data for Willow (<em>Salix</em> spp.)</p>
+
+<pre><code class="r">(salix &lt;- betydb_search(&quot;Salix Vcmax&quot;))
+#&gt; Source: local data frame [14 x 30]
+#&gt; 
+#&gt;    access_level       author citation_id citation_year  city    commonname
+#&gt; 1             4       Merilo         430          2005 Saare basket willow
+#&gt; 2             4       Merilo         430          2005 Saare basket willow
+#&gt; 3             4       Merilo         430          2005 Saare basket willow
+#&gt; 4             4       Merilo         430          2005 Saare basket willow
+#&gt; 5             4 Wullschleger          51          1993    NA        willow
+#&gt; 6             4       Merilo         430          2005 Saare basket willow
+#&gt; 7             4       Merilo         430          2005 Saare basket willow
+#&gt; 8             4       Merilo         430          2005 Saare basket willow
+#&gt; 9             4       Merilo         430          2005 Saare basket willow
+#&gt; 10            4       Merilo         430          2005 Saare        willow
+#&gt; 11            4       Merilo         430          2005 Saare        willow
+#&gt; 12            4       Merilo         430          2005 Saare        willow
+#&gt; 13            4       Merilo         430          2005 Saare        willow
+#&gt; 14            4         Wang         381          2010    NA              
+#&gt; Variables not shown: cultivar_id (int), date (chr), dateloc (chr), genus
+#&gt;   (chr), id (int), lat (dbl), lon (dbl), mean (chr), month (dbl), n (int),
+#&gt;   notes (chr), result_type (chr), scientificname (chr), site_id (int),
+#&gt;   sitename (chr), species_id (int), stat (chr), statname (chr), trait
+#&gt;   (chr), trait_description (chr), treatment (chr), treatment_id (int),
+#&gt;   units (chr), year (dbl)
+# equivalent: 
+# (out &lt;- betydb_search(&quot;willow&quot;))
+</code></pre>
+
+<p>Summarise data from the output <code>data.frame</code></p>
+
+<pre><code class="r">library(&quot;dplyr&quot;)
+salix %&gt;%
+  group_by(scientificname, trait) %&gt;%
+  mutate(.mean = as.numeric(mean)) %&gt;%
+  summarise(mean = round(mean(.mean, na.rm = TRUE), 2),
+            min = round(min(.mean, na.rm = TRUE), 2),
+            max = round(max(.mean, na.rm = TRUE), 2),
+            n = length(n))
+#&gt; Source: local data frame [4 x 6]
+#&gt; Groups: scientificname
+#&gt; 
+#&gt;                    scientificname trait  mean   min   max n
+#&gt; 1                           Salix Vcmax 65.00 65.00 65.00 1
+#&gt; 2                Salix dasyclados Vcmax 46.08 34.30 56.68 4
+#&gt; 3 Salix sachalinensis × miyabeana Vcmax 79.28 79.28 79.28 1
+#&gt; 4                 Salix viminalis Vcmax 43.04 19.99 61.29 8
+</code></pre>
+
+<h2>NCBI sequence data</h2>
+
+<p>Get sequences by id</p>
+
+<pre><code class="r">ncbi_byid(ids = &quot;360040093&quot;, format = &quot;fasta&quot;)
+#&gt;                  taxon
+#&gt; 1 Eristalis transversa
+#&gt;                                                                                                              gene_desc
+#&gt; 1  Eristalis transversa voucher CNC:Diptera:102013 cytochrome oxidase subunit 1 (COI) gene, partial cds; mitochondrial
+#&gt;       gi_no     acc_no length
+#&gt; 1 360040093 JN991986.1    658
+#&gt;                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                             sequence
+#&gt; 1 TACTTTATATTTTGTATTTGGAACATGAGCGGGTATAGTAGGAACTTCATTAAGAATTTTAATTCGAGCTGAATTAGGTCATCCAGGTGCATTAATTGGTGATGATCAAATTTATAATGTTATTGTAACAGCTCATGCTTTTGTTATAATTTTTTTTATAGTAATACCTATTATAATTGGAGGATTTGGAAATTGATTAGTACCACTTATATTAGGAGCTCCAGATATAGCATTCCCTCGAATAAATAATATAAGTTTCTGATTATTACCTCCTTCTTTAACTCTATTATTAGTAAGAAGTATAGTAGAAAATGGGGCTGGAACAGGATGAACAGTTTATCCTCCATTATCAAGTAATATTGCACATGGAGGAGCCTCAGTTGATTTAGCAATTTTTTCACTTCACTTATCAGGAATATCATCTATTTTAGGTGCAGTAAATTTTATTACAACAGTTATTAATATACGATCAACAGGAATTACTTATGATCGTATACCTTTATTTGTTTGATCTGTTGCTATTACAGCTTTATTATTATTATTATCATTACCAGTACTAGCAGGAGCTATTACAATATTATTAACTGATCGAAATTTAAATACATCATTCTTTGATCCAGCAGGAGGAGGAGACCCTATCCTGTACCAACACTTATTC
+</code></pre>
+
+<p>Get sequences searching by taxonomic name</p>
+
+<pre><code class="r">out &lt;- ncbi_searcher(taxa = &quot;Umbra limi&quot;, seqrange = &quot;1:2000&quot;)
+head(out)
+#&gt;        taxon length
+#&gt; 1 Umbra limi    412
+#&gt; 2 Umbra limi    315
+#&gt; 3 Umbra limi    200
+#&gt; 4 Umbra limi    333
+#&gt; 5 Umbra limi    242
+#&gt; 6 Umbra limi    386
+#&gt;                                                                                   gene_desc
+#&gt; 1 tRNA-Glu gene, partial sequence; and cytochrome b (CYTB) gene, partial cds; mitochondrial
+#&gt; 2                                   16S ribosomal RNA gene, partial sequence; mitochondrial
+#&gt; 3                                   16S ribosomal RNA gene, partial sequence; mitochondrial
+#&gt; 4                                   16S ribosomal RNA gene, partial sequence; mitochondrial
+#&gt; 5                                   12S ribosomal RNA gene, partial sequence; mitochondrial
+#&gt; 6                                   12S ribosomal RNA gene, partial sequence; mitochondrial
+#&gt;     acc_no     gi_no
+#&gt; 1 KM523322 725542537
+#&gt; 2 KM435059 725542420
+#&gt; 3 KM434991 725542361
+#&gt; 4 KM282516 725542294
+#&gt; 5 KM282453 725542240
+#&gt; 6 KM273864 725542182
+</code></pre>
+
+<h2>GISD invasive species data</h2>
+
+<pre><code class="r">sp &lt;- c(&quot;Carpobrotus edulis&quot;, &quot;Rosmarinus officinalis&quot;)
+g_invasive(sp)
+#&gt;                  species
+#&gt; 1     Carpobrotus edulis
+#&gt; 2 Rosmarinus officinalis
+#&gt;                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                               status
+#&gt; 1 Carpobrotus edulis is a mat-forming succulent native to South Africa which is invasive primarily in coastal habitats in many parts of the world. It was often introduced as an ornamental plant or used for planting along roadsides, from which it has spread to become invasive. Its main impacts are smothering, reduced regeneration of native flora and changes to soil pH and nutrient regimes.;  (succulent); Common Names: balsamo, Cape fig, figue marine, freeway iceplant, ghaukum, ghoenavy, highway ice plant, higo del Cabo, higo marino, Hottentosvy, hottentot fig, Hottentottenfeige, iceplant, ikhambi-lamabulawo, Kaapsevy, patata frita, perdevy, pigface, rankvy, sea fig, sour fig, suurvy, umgongozi, vyerank; Synonyms: Mesembryanthemum edule L., Mesembryanthemum edulis
+#&gt; 2                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        Not in GISD
+</code></pre>
+
+<p>Or as simplified output</p>
+
+<pre><code class="r">g_invasive(sp, simplify = TRUE)
+#&gt;                  species      status
+#&gt; 1     Carpobrotus edulis    Invasive
+#&gt; 2 Rosmarinus officinalis Not in GISD
+</code></pre>
+
+<h2>EOL invasive species data</h2>
+
+<pre><code class="r">eol_invasive_(&#39;Brassica oleracea&#39;, dataset = &#39;gisd&#39;)
+#&gt;       searched_name              name eol_object_id   db
+#&gt; 1 Brassica oleracea Brassica oleracea           NaN gisd
+</code></pre>
+
+<p>Another example, with more species, and from </p>
+
+<pre><code class="r">eol_invasive_(c(&#39;Lymantria dispar&#39;,&#39;Cygnus olor&#39;,&#39;Hydrilla verticillata&#39;,&#39;Pinus concolor&#39;),
+              dataset = &#39;i3n&#39;)
+#&gt;           searched_name                                name eol_object_id
+#&gt; 1      Lymantria dispar                    Lymantria dispar           NaN
+#&gt; 2           Cygnus olor           Cygnus olor (Gmelin 1789)        913227
+#&gt; 3 Hydrilla verticillata Hydrilla verticillata (L. f.) Royle       1088921
+#&gt; 4        Pinus concolor                      Pinus concolor           NaN
+#&gt;    db
+#&gt; 1 i3n
+#&gt; 2 i3n
+#&gt; 3 i3n
+#&gt; 4 i3n
+</code></pre>
+
+<h2>EOL&#39;s traitbank trait data</h2>
+
+<p>Searching for <em>Mesoplodon bidens</em>, page id <code>328566</code></p>
+
+<pre><code class="r">res &lt;- traitbank(trait = 328566)
+res$graph %&gt;% 
+  select(dwc.measurementtype..id, dwc.measurementtype.rdfs.label.en, dwc.measurementvalue) %&gt;% 
+  filter(!is.na(dwc.measurementvalue))
+#&gt; Source: local data frame [59 x 3]
+#&gt; 
+#&gt;                 dwc.measurementtype..id dwc.measurementtype.rdfs.label.en
+#&gt; 1      http://iucn.org/population_trend                  population trend
+#&gt; 2  http://rs.tdwg.org/dwc/terms/habitat                           habitat
+#&gt; 3  http://rs.tdwg.org/dwc/terms/habitat                           habitat
+#&gt; 4  http://rs.tdwg.org/dwc/terms/habitat                           habitat
+#&gt; 5  http://rs.tdwg.org/dwc/terms/habitat                           habitat
+#&gt; 6  http://rs.tdwg.org/dwc/terms/habitat                           habitat
+#&gt; 7  http://rs.tdwg.org/dwc/terms/habitat                           habitat
+#&gt; 8  http://rs.tdwg.org/dwc/terms/habitat                           habitat
+#&gt; 9  http://rs.tdwg.org/dwc/terms/habitat                           habitat
+#&gt; 10 http://rs.tdwg.org/dwc/terms/habitat                           habitat
+#&gt; ..                                  ...                               ...
+#&gt; Variables not shown: dwc.measurementvalue (chr)
+</code></pre>
+
+<h2>Coral</h2>
+
+<p>Get the species list and their ids</p>
+
+<pre><code class="r">coral_species()
+#&gt; Source: local data frame [1,547 x 2]
+#&gt; 
+#&gt;                          name id
+#&gt; 1         Acanthastrea brevis  3
+#&gt; 2       Acanthastrea echinata  4
+#&gt; 3      Acanthastrea hemprichi  6
+#&gt; 4  Acanthastrea ishigakiensis  8
+#&gt; 5      Acanthastrea regularis 12
+#&gt; 6   Acanthastrea rotundoflora 13
+#&gt; 7    Acanthastrea subechinata 14
+#&gt; 8      Acropora abrolhosensis 16
+#&gt; 9       Acropora abrotanoides 17
+#&gt; 10           Acropora aculeus 18
+#&gt; ..                        ... ..
+</code></pre>
+
+<p>Get data by taxon</p>
+
+<pre><code class="r">coral_taxa(80)
+#&gt; Source: local data frame [3,084 x 25]
+#&gt; 
+#&gt;    observation_id access user_id specie_id         specie_name location_id
+#&gt; 1          109330      1       2        80 Acropora hyacinthus           1
+#&gt; 2           88793      1      14        80 Acropora hyacinthus           0
+#&gt; 3          115791      1      10        80 Acropora hyacinthus           1
+#&gt; 4          115792      1      10        80 Acropora hyacinthus           1
+#&gt; 5            5694      1       2        80 Acropora hyacinthus           1
+#&gt; 6            5696      1       2        80 Acropora hyacinthus           1
+#&gt; 7            5741      1       1        80 Acropora hyacinthus           1
+#&gt; 8            5751      1       1        80 Acropora hyacinthus           1
+#&gt; 9            5787      1       1        80 Acropora hyacinthus           1
+#&gt; 10           5766      1       1        80 Acropora hyacinthus           1
+#&gt; ..            ...    ...     ...       ...                 ...         ...
+#&gt; Variables not shown: location_name (chr), latitude (dbl), longitude (dbl),
+#&gt;   resource_id (int), resource_secondary_id (int), measurement_id (int),
+#&gt;   trait_id (int), trait_name (chr), standard_id (int), standard_unit
+#&gt;   (chr), methodology_id (int), methodology_name (chr), value (chr),
+#&gt;   value_type (chr), precision (lgl), precision_type (lgl), precision_upper
+#&gt;   (lgl), replicates (lgl), notes (lgl)
+</code></pre>
+
+<p>Get data by trait</p>
+
+<pre><code class="r">coral_traits(105)
+#&gt; Source: local data frame [1,491 x 25]
+#&gt; 
+#&gt;    observation_id access user_id specie_id                specie_name
+#&gt; 1             155      1       8         3        Acanthastrea brevis
+#&gt; 2             236      1       1         4      Acanthastrea echinata
+#&gt; 3             364      1       8         6     Acanthastrea hemprichi
+#&gt; 4             495      1       1         8 Acanthastrea ishigakiensis
+#&gt; 5             738      1       8        12     Acanthastrea regularis
+#&gt; 6             804      1       8        13  Acanthastrea rotundoflora
+#&gt; 7             865      1       1        14   Acanthastrea subechinata
+#&gt; 8             981      1       8        16     Acropora abrolhosensis
+#&gt; 9            1061      1       8        17      Acropora abrotanoides
+#&gt; 10          90549      1       8        18           Acropora aculeus
+#&gt; ..            ...    ...     ...       ...                        ...
+#&gt; Variables not shown: location_id (int), location_name (chr), latitude
+#&gt;   (lgl), longitude (lgl), resource_id (int), resource_secondary_id (lgl),
+#&gt;   measurement_id (int), trait_id (int), trait_name (chr), standard_id
+#&gt;   (int), standard_unit (chr), methodology_id (lgl), methodology_name
+#&gt;   (lgl), value (chr), value_type (chr), precision (lgl), precision_type
+#&gt;   (lgl), precision_upper (lgl), replicates (lgl), notes (chr)
+</code></pre>
+
+<h2>Flora Europaea</h2>
+
+<pre><code class="r">sp &lt;- c(&quot;Lavandula stoechas&quot;, &quot;Carpobrotus edulis&quot;, &quot;Rhododendron ponticum&quot;,
+        &quot;Alkanna lutea&quot;, &quot;Anchusa arvensis&quot;)
+sapply(sp, fe_native, simplify = FALSE)
+#&gt; $`Lavandula stoechas`
+#&gt; $`Lavandula stoechas`$native
+#&gt;  [1] &quot;Islas_Baleares&quot; &quot;Corse&quot;          &quot;Kriti&quot;          &quot;France&quot;        
+#&gt;  [5] &quot;Greece&quot;         &quot;Spain&quot;          &quot;Italy&quot;          &quot;Portugal&quot;      
+#&gt;  [9] &quot;Sardegna&quot;       &quot;Sicilia&quot;        &quot;Turkey&quot;        
+#&gt; 
+#&gt; $`Lavandula stoechas`$exotic
+#&gt; [1] NA
+#&gt; 
+#&gt; $`Lavandula stoechas`$status_doubtful
+#&gt; [1] NA
+#&gt; 
+#&gt; $`Lavandula stoechas`$occurrence_doubtful
+#&gt; [1] NA
+#&gt; 
+#&gt; $`Lavandula stoechas`$extinct
+#&gt; [1] NA
+#&gt; 
+#&gt; 
+#&gt; $`Carpobrotus edulis`
+#&gt; $`Carpobrotus edulis`$native
+#&gt; [1] NA
+#&gt; 
+#&gt; $`Carpobrotus edulis`$exotic
+#&gt;  [1] &quot;Albania&quot;        &quot;Azores&quot;         &quot;Belgium&quot;        &quot;Islas_Baleares&quot;
+#&gt;  [5] &quot;Britain&quot;        &quot;Corse&quot;          &quot;France&quot;         &quot;Greece&quot;        
+#&gt;  [9] &quot;Ireland&quot;        &quot;Spain&quot;          &quot;Italy&quot;          &quot;Portugal&quot;      
+#&gt; [13] &quot;Sicilia&quot;       
+#&gt; 
+#&gt; $`Carpobrotus edulis`$status_doubtful
+#&gt; [1] NA
+#&gt; 
+#&gt; $`Carpobrotus edulis`$occurrence_doubtful
+#&gt; [1] NA
+#&gt; 
+#&gt; $`Carpobrotus edulis`$extinct
+#&gt; [1] NA
+#&gt; 
+#&gt; 
+#&gt; $`Rhododendron ponticum`
+#&gt; $`Rhododendron ponticum`$native
+#&gt; [1] &quot;Bulgaria&quot; &quot;Spain&quot;    &quot;Portugal&quot; &quot;Turkey&quot;  
+#&gt; 
+#&gt; $`Rhododendron ponticum`$exotic
+#&gt; [1] &quot;Belgium&quot; &quot;Britain&quot; &quot;France&quot;  &quot;Ireland&quot;
+#&gt; 
+#&gt; $`Rhododendron ponticum`$status_doubtful
+#&gt; [1] NA
+#&gt; 
+#&gt; $`Rhododendron ponticum`$occurrence_doubtful
+#&gt; [1] NA
+#&gt; 
+#&gt; $`Rhododendron ponticum`$extinct
+#&gt; [1] NA
+#&gt; 
+#&gt; 
+#&gt; $`Alkanna lutea`
+#&gt; $`Alkanna lutea`$native
+#&gt; [1] &quot;Islas_Baleares&quot; &quot;Corse&quot;          &quot;France&quot;         &quot;Spain&quot;         
+#&gt; [5] &quot;Italy&quot;          &quot;Sardegna&quot;      
+#&gt; 
+#&gt; $`Alkanna lutea`$exotic
+#&gt; [1] NA
+#&gt; 
+#&gt; $`Alkanna lutea`$status_doubtful
+#&gt; [1] NA
+#&gt; 
+#&gt; $`Alkanna lutea`$occurrence_doubtful
+#&gt; [1] &quot;Portugal&quot;
+#&gt; 
+#&gt; $`Alkanna lutea`$extinct
+#&gt; [1] NA
+#&gt; 
+#&gt; 
+#&gt; $`Anchusa arvensis`
+#&gt; $`Anchusa arvensis`$native
+#&gt;  [1] &quot;Albania&quot;                    &quot;Austria&quot;                   
+#&gt;  [3] &quot;Belgium&quot;                    &quot;Islas_Baleares&quot;            
+#&gt;  [5] &quot;Britain&quot;                    &quot;Bulgaria&quot;                  
+#&gt;  [7] &quot;Corse&quot;                      &quot;Czechoslovakia&quot;            
+#&gt;  [9] &quot;Denmark&quot;                    &quot;Finland&quot;                   
+#&gt; [11] &quot;France&quot;                     &quot;Germany&quot;                   
+#&gt; [13] &quot;Greece&quot;                     &quot;Switzerland&quot;               
+#&gt; [15] &quot;Netherlands&quot;                &quot;Spain&quot;                     
+#&gt; [17] &quot;Hungary&quot;                    &quot;Italy&quot;                     
+#&gt; [19] &quot;Jugoslavia&quot;                 &quot;Portugal&quot;                  
+#&gt; [21] &quot;Norway&quot;                     &quot;Poland&quot;                    
+#&gt; [23] &quot;Romania&quot;                    &quot;USSR&quot;                      
+#&gt; [25] &quot;USSR_Northern_Division&quot;     &quot;USSR_Baltic_Division&quot;      
+#&gt; [27] &quot;USSR_Central_Division&quot;      &quot;USSR_South_western&quot;        
+#&gt; [29] &quot;USSR_Krym&quot;                  &quot;USSRSouth_eastern_Division&quot;
+#&gt; [31] &quot;Sicilia&quot;                    &quot;Sweden&quot;                    
+#&gt; 
+#&gt; $`Anchusa arvensis`$exotic
+#&gt; [1] &quot;Faroer&quot;
+#&gt; 
+#&gt; $`Anchusa arvensis`$status_doubtful
+#&gt; [1] &quot;Ireland&quot;  &quot;Sardegna&quot;
+#&gt; 
+#&gt; $`Anchusa arvensis`$occurrence_doubtful
+#&gt; [1] NA
+#&gt; 
+#&gt; $`Anchusa arvensis`$extinct
+#&gt; [1] NA
+</code></pre>
+
+<h2>Birdlife International</h2>
+
+<p>Habitat data</p>
+
+<pre><code class="r">birdlife_habitat(22721692)
+#&gt;         id Habitat (level 1)                  Habitat (level 2) Importance
+#&gt; 1 22721692            Forest           Subtropical/Tropical Dry   suitable
+#&gt; 2 22721692            Forest Subtropical/Tropical Moist Montane      major
+#&gt; 3 22721692            Forest                          Temperate   suitable
+#&gt; 4 22721692         Shrubland Subtropical/Tropical High Altitude   suitable
+#&gt;     Occurrence
+#&gt; 1     breeding
+#&gt; 2 non-breeding
+#&gt; 3     breeding
+#&gt; 4     breeding
+</code></pre>
+
+<p>Threats data</p>
+
+<pre><code class="r">birdlife_threats(22721692)
+#&gt;         id                                                  threat1
+#&gt; 1 22721692                                Agriculture &amp; aquaculture
+#&gt; 2 22721692                                Agriculture &amp; aquaculture
+#&gt; 3 22721692                                  Biological resource use
+#&gt; 4 22721692                               Energy production &amp; mining
+#&gt; 5 22721692 Invasive and other problematic species, genes &amp; diseases
+#&gt; 6 22721692                     Residential &amp; commercial development
+#&gt;                                                                                  threat2
+#&gt; 1                            Annual &amp; perennial non-timber crops / Agro-industry farming
+#&gt; 2                             Annual &amp; perennial non-timber crops / Small-holder farming
+#&gt; 3 Logging &amp; wood harvesting / Unintentional effects: (subsistence/small scale) [harvest]
+#&gt; 4                                                                     Mining &amp; quarrying
+#&gt; 5                                                    Problematic native species/diseases
+#&gt; 6                                                                  Housing &amp; urban areas
+#&gt;                                      stresses  timing             scope
+#&gt; 1 Ecosystem degradation, Ecosystem conversion Ongoing Majority (50-90%)
+#&gt; 2 Ecosystem degradation, Ecosystem conversion Ongoing Majority (50-90%)
+#&gt; 3                       Ecosystem degradation Ongoing Majority (50-90%)
+#&gt; 4 Ecosystem degradation, Ecosystem conversion Ongoing Majority (50-90%)
+#&gt; 5                           Species mortality Ongoing        Minority (
+#&gt; 6 Ecosystem degradation, Ecosystem conversion Ongoing        Minority (
+#&gt;                    severity           impact
+#&gt; 1 Slow, Significant Decline Medium Impact: 6
+#&gt; 2 Slow, Significant Decline Medium Impact: 6
+#&gt; 3 Slow, Significant Decline Medium Impact: 6
+#&gt; 4 Slow, Significant Decline Medium Impact: 6
+#&gt; 5                No decline    Low Impact: 4
+#&gt; 6 Slow, Significant Decline    Low Impact: 5
+</code></pre>
+
+<h2>Nativity</h2>
+
+<pre><code class="r">sp &lt;- c(&quot;Lavandula stoechas&quot;, &quot;Carpobrotus edulis&quot;, &quot;Rhododendron ponticum&quot;,
+      &quot;Alkanna lutea&quot;, &quot;Anchusa arvensis&quot;)
+</code></pre>
+
+<p>Native in the continental USA?</p>
+
+<pre><code class="r">sapply(sp, is_native, where = &quot;Continental US&quot;, region = &quot;america&quot;)
+#&gt;    Lavandula stoechas    Carpobrotus edulis Rhododendron ponticum 
+#&gt;          &quot;Introduced&quot;          &quot;Introduced&quot; &quot;species not in itis&quot; 
+#&gt;         Alkanna lutea      Anchusa arvensis 
+#&gt; &quot;species not in itis&quot;          &quot;Introduced&quot;
+</code></pre>
+
+<p>Native on Islas Baleares?</p>
+
+<pre><code class="r">sapply(sp, is_native, where = &quot;Islas_Baleares&quot;, region = &quot;europe&quot;)
+#&gt;    Lavandula stoechas    Carpobrotus edulis Rhododendron ponticum 
+#&gt;              &quot;Native&quot;          &quot;Introduced&quot;           &quot;Not found&quot; 
+#&gt;         Alkanna lutea      Anchusa arvensis 
+#&gt;              &quot;Native&quot;              &quot;Native&quot;
+</code></pre>
+
+</body>
+
+</html>
