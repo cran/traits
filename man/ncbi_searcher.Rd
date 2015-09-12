@@ -5,13 +5,14 @@
 \title{Search for gene sequences available for taxa from NCBI.}
 \usage{
 ncbi_searcher(taxa = NULL, id = NULL, seqrange = "1:3000",
-  getrelated = FALSE, limit = 500, entrez_query = NULL,
+  getrelated = FALSE, fuzzy = FALSE, limit = 500, entrez_query = NULL,
   hypothetical = FALSE, verbose = TRUE)
 }
 \arguments{
 \item{taxa}{(character) Scientific name to search for.}
 
-\item{id}{(\code{character}) Taxonomic id to search for. Not compatible with argument \code{taxa}.}
+\item{id}{(\code{character}) Taxonomic id to search for. Not compatible with
+argument \code{taxa}.}
 
 \item{seqrange}{(character) Sequence range, as e.g., \code{"1:1000"}. This is the range of
 sequence lengths to search for. So \code{"1:1000"} means search for sequences from 1 to 1000
@@ -20,6 +21,10 @@ characters in length.}
 \item{getrelated}{(logical) If \code{TRUE}, gets the longest sequences of a species
 in the same genus as the one searched for. If \code{FALSE}, returns nothing if no match
 found.}
+
+\item{fuzzy}{(logical) Whether to do fuzzy taxonomic ID search or exact search. If \code{TRUE},
+we use \code{xXarbitraryXx[porgn:__txid<ID>]}, but if \code{FALSE}, we use \code{txid<ID>}.
+Default: \code{FALSE}}
 
 \item{limit}{(\code{numeric}) Number of sequences to search for and return. Max of 10,000.
 If you search for 6000 records, and only 5000 are found, you will of course
@@ -38,14 +43,14 @@ available, since this filtering is done after searching NCBI.}
 \item{verbose}{(logical) If \code{TRUE} (default), informative messages printed.}
 }
 \value{
-\code{data.frame} of results if a single input is given. A list of \code{data.frame}s if
-  multiple inputs are given.
+\code{data.frame} of results if a single input is given. A list of
+ \code{data.frame}s if multiple inputs are given.
 }
 \description{
 Search for gene sequences available for taxa from NCBI.
 }
 \examples{
-\donttest{
+\dontrun{
 # A single species
 out <- ncbi_searcher(taxa="Umbra limi", seqrange = "1:2000")
 # Get the same species information using a taxonomy id
@@ -76,6 +81,10 @@ out2df[grep("12S", out2df$gene_desc, ignore.case=TRUE), ]
 # Using the getrelated and entrez_query options
 ncbi_searcher(taxa = "Olpidiopsidales", limit = 5, getrelated = TRUE,
             entrez_query = "18S[title] AND 28S[title]")
+
+# get refseqs
+one <- ncbi_searcher(taxa = "Salmonella enterica", entrez_query="srcdb_refseq[PROP]")
+two <- ncbi_searcher(taxa = "Salmonella enterica")
 }
 }
 \author{

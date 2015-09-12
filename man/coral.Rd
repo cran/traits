@@ -50,15 +50,15 @@ coral_species(...)
 Search for coral data on coraltraits.org
 }
 \examples{
-\donttest{
+\dontrun{
 # Get the species and their Ids
 head( coral_species() )
 
 # Get data by taxon
-coral_taxa(80)
+coral_taxa(8)
 
 # Get data by trait
-coral_traits(105)
+coral_traits(3)
 
 # Get data by methodology
 coral_methodologies(2)
@@ -67,11 +67,11 @@ coral_methodologies(2)
 coral_locations(132)
 
 # Get data by resource
-coral_resources(10)
+coral_resources(9)
 
 # curl options
 library("httr")
-coral_taxa(80, config=verbose())
+coral_taxa(8, config=verbose())
 }
 }
 \author{

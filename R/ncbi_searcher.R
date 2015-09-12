@@ -3,8 +3,9 @@
 #' @export
 #' @template ncbi
 #' @importFrom taxize get_uid classification
-#' @importFrom XML xpathApply xpathSApply xmlGetAttr
-#' @param id (\code{character}) Taxonomic id to search for. Not compatible with argument \code{taxa}.
+#' @importFrom XML xpathApply xpathSApply xmlGetAttr xmlParse
+#' @param id (\code{character}) Taxonomic id to search for. Not compatible with
+#'    argument \code{taxa}.
 #' @param limit (\code{numeric}) Number of sequences to search for and return. Max of 10,000.
 #'    If you search for 6000 records, and only 5000 are found, you will of course
 #'    only get 5000 back.
@@ -12,16 +13,19 @@
 #'   This is useful to search for sequences with specific characteristics. The format is the same
 #'   as the one used to seach genbank.
 #'   (\url{http://www.ncbi.nlm.nih.gov/books/NBK3837/#EntrezHelp.Entrez_Searching_Options})
+#' @param fuzzy (logical) Whether to do fuzzy taxonomic ID search or exact search. If \code{TRUE},
+#'    we use \code{xXarbitraryXx[porgn:__txid<ID>]}, but if \code{FALSE}, we use \code{txid<ID>}.
+#'    Default: \code{FALSE}
 #' @param hypothetical (\code{logical}; length 1) If \code{FALSE}, an attempt will be made to not
 #'   return hypothetical or predicted sequences judging from accession number prefixs (XM and XR).
 #'   This can result in less than the \code{limit} being returned even if there are more sequences
 #'   available, since this filtering is done after searching NCBI.
-#' @return \code{data.frame} of results if a single input is given. A list of \code{data.frame}s if
-#'   multiple inputs are given.
+#' @return \code{data.frame} of results if a single input is given. A list of
+#'  \code{data.frame}s if multiple inputs are given.
 #' @seealso \code{\link[taxize]{ncbi_getbyid}}, \code{\link[taxize]{ncbi_getbyname}}
 #' @author Scott Chamberlain \email{myrmecocystus@@gmail.com}, Zachary Foster
 #'   \email{zacharyfoster1989@@gmail.com}
-#' @examples \donttest{
+#' @examples \dontrun{
 #' # A single species
 #' out <- ncbi_searcher(taxa="Umbra limi", seqrange = "1:2000")
 #' # Get the same species information using a taxonomy id
@@ -52,9 +56,13 @@
 #' # Using the getrelated and entrez_query options
 #' ncbi_searcher(taxa = "Olpidiopsidales", limit = 5, getrelated = TRUE,
 #'             entrez_query = "18S[title] AND 28S[title]")
+#'
+#' # get refseqs
+#' one <- ncbi_searcher(taxa = "Salmonella enterica", entrez_query="srcdb_refseq[PROP]")
+#' two <- ncbi_searcher(taxa = "Salmonella enterica")
 #' }
-ncbi_searcher <- function(taxa = NULL, id = NULL, seqrange="1:3000", getrelated=FALSE, limit = 500,
-                          entrez_query = NULL, hypothetical = FALSE, verbose=TRUE) {
+ncbi_searcher <- function(taxa = NULL, id = NULL, seqrange="1:3000", getrelated=FALSE, fuzzy=FALSE,
+                          limit = 500, entrez_query = NULL, hypothetical = FALSE, verbose=TRUE) {
 
   # Argument validation ----------------------------------------------------------------------------
   if (sum(c(is.null(taxa), is.null(id))) != 1) {
@@ -71,14 +79,15 @@ ncbi_searcher <- function(taxa = NULL, id = NULL, seqrange="1:3000", getrelated=
     names(id) <- id
   }
 
+  if (getrelated) fuzzy <- TRUE
   # look up sequences for taxa ids -----------------------------------------------------------------
   if (length(id) == 1) {
     ncbi_searcher_foo(id, getrelated = getrelated, verbose = verbose,
-                      seqrange = seqrange, entrez_query = entrez_query,
+                      seqrange = seqrange, entrez_query = entrez_query, fuzzy = fuzzy,
                       limit = limit, hypothetical = hypothetical)
   } else {
     lapply(id, ncbi_searcher_foo, getrelated = getrelated, verbose = verbose,
-           seqrange = seqrange, entrez_query = entrez_query, limit = limit,
+           seqrange = seqrange, entrez_query = entrez_query, fuzzy = fuzzy, limit = limit,
            hypothetical = hypothetical)
   }
 }
@@ -88,11 +97,11 @@ url_esearch <- "http://eutils.ncbi.nlm.nih.gov/entrez/eutils/esearch.fcgi"
 url_esummary <- "http://eutils.ncbi.nlm.nih.gov/entrez/eutils/esummary.fcgi"
 
 # Function to process queries one at a time ------------------------------------------------------
-ncbi_searcher_foo <- function(xx, getrelated, verbose, seqrange, entrez_query, limit, hypothetical, ...) {
+ncbi_searcher_foo <- function(xx, getrelated, verbose, seqrange, entrez_query, fuzzy, limit, hypothetical, ...) {
   # Search for sequence IDs for the given taxon  - - - - - - - - - - - - - - - - - - - - - - - - -
   mssg(verbose, paste("Working on ", names(xx), "...", sep = ""))
   mssg(verbose, "...retrieving sequence IDs...")
-  seq_ids <- search_for_sequences(xx, seqrange, entrez_query, limit, ...)
+  seq_ids <- search_for_sequences(xx, seqrange, entrez_query, fuzzy, limit, ...)
   # Search for sequences of the taxons parent if necessary and possible  - - - - - - - - - - - - -
   if (is.null(seq_ids) && getrelated) {
     mssg(verbose, paste("no sequences for ", names(xx), " - getting other related taxa", sep = ""))
@@ -101,7 +110,7 @@ ncbi_searcher_foo <- function(xx, getrelated, verbose, seqrange, entrez_query, l
       mssg(verbose, paste0("no related taxa found"))
     } else {
       mssg(verbose, paste0("...retrieving sequence IDs for ", names(xx), "..."))
-      seq_ids <- search_for_sequences(parent_id, seqrange, entrez_query, limit, ...)
+      seq_ids <- search_for_sequences(parent_id, seqrange, entrez_query, fuzzy, limit, ...)
     }
   }
   # Retrieve sequence information  - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -118,10 +127,15 @@ ncbi_searcher_foo <- function(xx, getrelated, verbose, seqrange, entrez_query, l
 }
 
 # Function to search for sequences with esearch --------------------------------------------------
-search_for_sequences <- function(id, seqrange, entrez_query, limit, ...) {
+search_for_sequences <- function(id, seqrange, entrez_query, fuzzy, limit, ...) {
   if (is.na(id)) return(NULL)
   # Construct search query  - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-  query_term <- paste0("xXarbitraryXx[porgn:__txid", id, "] AND ", seqrange, " [SLEN]")
+  ## fuzzy or not fuzzy
+  query_term <- if (fuzzy) {
+    sprintf("xXarbitraryXx[porgn:__txid%s] AND %s[SLEN]", id, seqrange)
+  } else {
+    sprintf("txid%s AND %s[SLEN]", id, seqrange)
+  }
   if (!is.null(entrez_query)) query_term <- paste(query_term, entrez_query, sep = " AND ")
   query <- list(db = "nuccore", retmax = limit, term = query_term)
   # Submit query to NCBI - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -189,10 +203,30 @@ parseres <- function(x, hypothetical){
 
   length_ <- as.numeric(sapply(getNodeSet(outsum, "//Item"), xmlValue)[grepl("Length", names)]) # gets seq lengths
   gis <- as.numeric(sapply(getNodeSet(outsum, "//Item"), xmlValue)[grepl("Gi", names)]) # gets GI numbers
-  spnames <- sapply(getNodeSet(outsum, "//Item"), xmlValue)[grepl("Title", names)] # gets seq lengths # get spp names
-  spused <- sapply(spnames, function(x) paste(strsplit(x, " ")[[1]][1:2], sep = "", collapse = " "), USE.NAMES = FALSE)
-  genesavail <- sapply(spnames, function(x) paste(strsplit(x, " ")[[1]][-c(1:2)], sep = "", collapse = " "), USE.NAMES = FALSE)
-  df <- data.frame(spused = spused, length = length_, genesavail = genesavail, access_num = predicted, ids = gis, stringsAsFactors = FALSE)
+
+  spused <- taxonomy(zz = outsum)
+
+  desc <- sapply(getNodeSet(outsum, "//Item"), xmlValue)[grepl("Title", names)] # gets seq lengths # get spp names
+#   spused <- sapply(spnames, function(x) paste(strsplit(x, " ")[[1]][1:2], sep = "", collapse = " "))
+
+  # genesavail <- sapply(spnames, function(x) paste(strsplit(x, " ")[[1]][-c(1:2)], sep = "", collapse = " "), USE.NAMES = FALSE)
+  df <- data.frame(spused = spused, length = length_, genesavail = desc, access_num = predicted, ids = gis, stringsAsFactors = FALSE)
   if (!hypothetical) df <- df[!(access_prefix %in% c("XM","XR")), ]
   return(df)
+}
+
+taxonomy <- function(zz) {
+  taxids <- xpathSApply(zz, '//Item[@Name="TaxId"]', xmlValue)
+  uids <- unique(taxids)
+  out <- list()
+  for (i in seq_along(uids)) {
+    res <- GET(paste0(url_esummary, "?db=taxonomy&id=", uids[i]))
+    stop_for_status(res)
+    xml <- xmlParse(content(res, "text"))
+    out[[ uids[i] ]] <- xpathSApply(xml, '//Item[@Name="ScientificName"]', xmlValue)
+  }
+  for (i in seq_along(out)) {
+    taxids[grepl(names(out)[i], taxids)] <- out[[i]]
+  }
+  return(taxids)
 }
