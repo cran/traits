@@ -5,7 +5,7 @@ Description: Species trait data from many different sources, including
     data from the Global Invasive Species Database and 'EOL', 'Traitbank' data
     from 'EOL', Coral traits data from http://coraltraits.org, 'nativity' status
     ('Flora Europaea' or 'ITIS'), and 'Birdlife' International.
-Version: 0.1.2
+Version: 0.2.0
 Authors@R: c(
     person("Scott", "Chamberlain", role = c("aut", "cre"), email = "myrmecocystus@gmail.com"),
     person("Zachary", "Foster", role = "aut", email = "zacharyfoster1989@gmail.com"),
@@ -19,11 +19,13 @@ BugReports: http://www.github.com/ropensci/traits/issues
 LazyData: true
 VignetteBuilder: knitr
 Depends: R (>= 2.10)
-Imports: methods, stats, utils, XML, jsonlite, httr, dplyr, data.table,
-        taxize
-Suggests: roxygen2, knitr, testthat, plyr
+Imports: methods, stats, utils, jsonlite (>= 0.9.19), httr (>= 1.1.0),
+        dplyr (>= 0.4.3), data.table (>= 1.9.6), readr (>= 0.2.2),
+        taxize (>= 0.7.4), xml2 (>= 0.1.2), rvest (>= 0.3.1)
+Suggests: roxygen2 (>= 5.0.1), knitr, testthat, plyr, covr
+RoxygenNote: 5.0.1
 NeedsCompilation: no
-Packaged: 2015-09-11 22:09:03 UTC; sacmac
+Packaged: 2016-03-18 14:28:13 UTC; sacmac
 Author: Scott Chamberlain [aut, cre],
   Zachary Foster [aut],
   Ignasi Bartomeus [aut],
@@ -31,4 +33,4 @@ Author: Scott Chamberlain [aut, cre],
   David Harris [aut]
 Maintainer: Scott Chamberlain <myrmecocystus@gmail.com>
 Repository: CRAN
-Date/Publication: 2015-09-12 17:20:16
+Date/Publication: 2016-03-18 15:58:47

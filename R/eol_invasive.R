@@ -2,7 +2,6 @@
 #'
 #' See Details for important information.
 #'
-#' @importFrom jsonlite fromJSON
 #' @export
 #' @param name A taxonomic name, or a vector of names.
 #' @param dataset One of all, gisd100, gisd, isc, daisie, i3n, or mineps.
@@ -82,6 +81,8 @@
 eol_invasive_ <- function(name = NULL, dataset="all", searchby = grep, page=NULL,
   per_page=NULL, key = NULL, verbose=TRUE, count=FALSE, ...) {
 
+  .Deprecated(msg = "eol_invasive_ is deprecated - see eol() function in originr")
+
   if (is.null(name)) stop("please provide a taxonomic name")
   if (is.null(dataset)) stop("please provide a dataset name")
   datasetid <- switch(dataset,
@@ -97,7 +98,7 @@ eol_invasive_ <- function(name = NULL, dataset="all", searchby = grep, page=NULL
   args <- traitsc(list(id = datasetid, page = page, per_page = 500, filter = 'taxa'))
   tt <- GET(url, query = args, ...)
   stop_for_status(tt)
-  res <- jsonlite::fromJSON(content(tt, "text"), FALSE)
+  res <- jsonlite::fromJSON(content(tt, "text", encoding = "UTF-8"), FALSE)
   data_init <- res$collection_items
   mssg(verbose, sprintf("Getting data for %s names...", res$total_items))
 
@@ -116,7 +117,7 @@ eol_invasive_ <- function(name = NULL, dataset="all", searchby = grep, page=NULL
       args <- traitsc(list(id = datasetid, page = pages_get[i], per_page = 500, filter = 'taxa'))
       tt <- GET(url, query = args, ...)
       stop_for_status(tt)
-      res <- jsonlite::fromJSON(content(tt, "text"), FALSE)
+      res <- jsonlite::fromJSON(content(tt, "text", encoding = "UTF-8"), FALSE)
       out[[i]] <- res$collection_items
     }
     res2 <- traitsc(out)
