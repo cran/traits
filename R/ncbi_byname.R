@@ -3,6 +3,7 @@
 #' @export
 #' @template ncbi
 #' @param gene (character) Gene or genes (in a vector) to search for. See examples.
+#' @param ... Curl options passed on to \code{\link[httr]{GET}}
 #' @details Removes predicted sequences so you don't have to remove them.
 #'   	Predicted sequences are those with accession numbers that have "XM_" or
 #' 		"XR_" prefixes. This function retrieves one sequences for each species,
@@ -15,10 +16,11 @@
 #' ncbi_byname(taxa="Acipenser brevirostrum")
 #'
 #' # Many species
-#' species <- c("Colletes similis","Halictus ligatus","Perdita trisignata")
+#' species <- c("Colletes similis","Halictus ligatus","Perdita californica")
 #' ncbi_byname(taxa=species, gene = c("coi", "co1"), seqrange = "1:2000")
 #' }
-ncbi_byname <- function(taxa, gene="COI", seqrange="1:3000", getrelated=FALSE, verbose=TRUE) {
+ncbi_byname <- function(taxa, gene="COI", seqrange="1:3000", getrelated=FALSE,
+                        verbose=TRUE, ...) {
   foo <- function(xx) {
     mssg(verbose, paste("Working on ", xx, "...", sep = ""))
     mssg(verbose, "...retrieving sequence IDs...")
@@ -30,28 +32,35 @@ ncbi_byname <- function(taxa, gene="COI", seqrange="1:3000", getrelated=FALSE, v
     }
     genes_ <- paste("(", genes_, ")")
 
-    query <- list(db = "nuccore", term = paste(xx, "[Organism] AND", genes_, "AND",
-                                               seqrange, "[SLEN]", collapse = " "), RetMax = 500)
+    query <- list(
+      db = "nuccore",
+      term = paste(xx, "[Organism] AND", genes_, "AND",
+                   seqrange, "[SLEN]", collapse = " "),
+      RetMax = 500)
 
     out <-
-      xml2::xml_find_all(xml2::read_xml(content(GET("http://eutils.ncbi.nlm.nih.gov/entrez/eutils/esearch.fcgi",
+      xml2::xml_find_all(xml2::read_xml(content(GET("https://eutils.ncbi.nlm.nih.gov/entrez/eutils/esearch.fcgi",
                              query = query), "text", encoding = "UTF-8")), "//eSearchResult")[[1]]
     if (as.numeric(xml2::xml_text(xml2::xml_find_all(out, "//Count")[[1]])) == 0) {
       message(paste("no sequences of ", gene, " for ", xx, " - getting other sp.", sep = ""))
       if (getrelated == FALSE) {
         mssg(verbose, paste("no sequences of ", gene, " for ", xx, sep = ""))
-        res <- data.frame(list(xx, "NA", "NA", "NA", "NA", "NA", "NA"))
+        res <- data.frame(
+          xx, NA_character_, NA_real_, NA_character_, NA_real_, NA_character_, NA_character_,
+          stringsAsFactors = FALSE)
         names(res) <- NULL
       } else {
         mssg(verbose, "...retrieving sequence IDs for related species...")
         newname <- strsplit(xx, " ")[[1]][[1]]
         query <- list(db = "nuccore", term = paste(newname, "[Organism] AND", genes_, "AND", seqrange, "[SLEN]", collapse = " "), RetMax = 500)
         out <-
-          xml2::xml_find_all(xml2::read_xml(content(GET("http://eutils.ncbi.nlm.nih.gov/entrez/eutils/esearch.fcgi", query = query),
+          xml2::xml_find_all(xml2::read_xml(content(GET("https://eutils.ncbi.nlm.nih.gov/entrez/eutils/esearch.fcgi", query = query),
                                                     "text", encoding = "UTF-8")), "//eSearchResult")[[1]]
         if (as.numeric(xml2::xml_text(xml2::xml_find_all(out, "//Count")[[1]])) == 0) {
           mssg(verbose, paste("no sequences of ", gene, " for ", xx, " or ", newname, sep = ""))
-          res <- data.frame(list(xx, "NA", "NA", "NA", "NA", "NA", "NA"))
+          res <- data.frame(
+            xx, NA_character_, NA_real_, NA_character_, NA_real_, NA_character_, NA_character_,
+            stringsAsFactors = FALSE)
           names(res) <- NULL
         } else {
           ## For each species = get GI number with longest sequence
@@ -59,7 +68,7 @@ ncbi_byname <- function(taxa, gene="COI", seqrange="1:3000", getrelated=FALSE, v
           querysum <- list(db = "nucleotide", id = paste(make_ids(out), collapse = " ")) # construct query for species
           res <- parse_ncbi(xx,
                 xml2::xml_find_all(
-                  xml2::read_xml(content(GET("http://eutils.ncbi.nlm.nih.gov/entrez/eutils/esummary.fcgi",
+                  xml2::read_xml(content(GET("https://eutils.ncbi.nlm.nih.gov/entrez/eutils/esummary.fcgi",
                                    query = querysum), "text", encoding = "UTF-8")), "//eSummaryResult"), verbose)
         }
       }
@@ -68,12 +77,12 @@ ncbi_byname <- function(taxa, gene="COI", seqrange="1:3000", getrelated=FALSE, v
       mssg(verbose, "...retrieving sequence ID with longest sequence length...")
       querysum <- list(db = "nucleotide", id = paste(make_ids(out), collapse = " ")) # construct query for species
       res <- parse_ncbi(xx, xml2::xml_find_all(xml2::read_xml(content( # API call
-        GET("http://eutils.ncbi.nlm.nih.gov/entrez/eutils/esummary.fcgi",
+        GET("https://eutils.ncbi.nlm.nih.gov/entrez/eutils/esummary.fcgi",
             query = querysum), "text", encoding = "UTF-8")), "//eSummaryResult")[[1]], verbose)
     }
 
     mssg(verbose, "...done.")
-    setNames(res, c("taxon", "gene_desc", "gi_no", "acc_no", "length", "sequence", "spused"))
+    stats::setNames(res, c("taxon", "gene_desc", "gi_no", "acc_no", "length", "sequence", "spused"))
   }
 
   foo_safe <- tryfail(NULL, foo)
@@ -96,7 +105,7 @@ parse_ncbi <- function(xx, z, verbose){
   ## Get sequence from previous
   mssg(verbose, "...retrieving sequence...")
   queryseq <- list(db = "sequences", id = gisuse[,1], rettype = "fasta", retmode = "text")
-  outseq <- content(GET("http://eutils.ncbi.nlm.nih.gov/entrez/eutils/efetch.fcgi", query = queryseq), "text", encoding = "UTF-8")
+  outseq <- content(GET("https://eutils.ncbi.nlm.nih.gov/entrez/eutils/efetch.fcgi", query = queryseq), "text", encoding = "UTF-8")
   seq <- gsub("\n", "", strsplit(sub("\n", "<<<", outseq), "<<<")[[1]][[2]])
   accessnum <- strsplit(outseq, "\\|")[[1]][4]
   outt <- list(xx, as.character(gisuse[,3]), gisuse[,1], accessnum, gisuse[,2], seq)

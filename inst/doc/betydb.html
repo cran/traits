@@ -234,20 +234,20 @@ out %&gt;%
   arrange(desc(mean_result))
 </code></pre>
 
-<pre><code>## Source: local data frame [509 x 2]
-## 
+<pre><code>## # A tibble: 449 x 2
 ##       id mean_result
-## 1   1666       27.36
-## 2  16845       27.00
-## 3   1669       26.36
-## 4  16518       26.00
-## 5   1663       25.35
-## 6  16742       25.00
-## 7   1594       24.78
-## 8   1674       22.71
-## 9   1606       22.54
+##    &lt;int&gt;       &lt;dbl&gt;
+##  1  1666       27.36
+##  2 16845       27.00
+##  3  1669       26.36
+##  4 16518       26.00
+##  5  1663       25.35
+##  6 16742       25.00
+##  7  1594       24.78
+##  8  1674       22.71
+##  9  1606       22.54
 ## 10  1665       22.46
-## ..   ...         ...
+## # ... with 439 more rows
 </code></pre>
 
 <p>Single trait</p>
@@ -255,17 +255,11 @@ out %&gt;%
 <pre><code class="r">betydb_trait(id = 10)
 </code></pre>
 
-<pre><code>## $created_at
-## NULL
-## 
-## $description
+<pre><code>## $description
 ## [1] &quot;Leaf Percent Nitrogen&quot;
 ## 
 ## $id
 ## [1] 10
-## 
-## $label
-## NULL
 ## 
 ## $max
 ## [1] &quot;10&quot;
@@ -278,12 +272,6 @@ out %&gt;%
 ## 
 ## $notes
 ## [1] &quot;&quot;
-## 
-## $standard_name
-## NULL
-## 
-## $standard_units
-## NULL
 ## 
 ## $units
 ## [1] &quot;percent&quot;
@@ -299,14 +287,11 @@ out %&gt;%
 <pre><code class="r">betydb_specie(id = 10)
 </code></pre>
 
-<pre><code>## $AcceptedSymbol
+<pre><code>## $acceptedsymbol
 ## [1] &quot;ACKA2&quot;
 ## 
 ## $commonname
 ## [1] &quot;karroothorn&quot;
-## 
-## $created_at
-## NULL
 ## 
 ## $genus
 ## [1] &quot;Acacia&quot;
@@ -319,9 +304,6 @@ out %&gt;%
 ## 
 ## $scientificname
 ## [1] &quot;Acacia karroo&quot;
-## 
-## $spcd
-## NULL
 ## 
 ## $species
 ## [1] &quot;karroo&quot;
@@ -339,9 +321,6 @@ out %&gt;%
 
 <pre><code>## $author
 ## [1] &quot;Casler&quot;
-## 
-## $created_at
-## NULL
 ## 
 ## $doi
 ## [1] &quot;10.2135/cropsci2003.2226&quot;
@@ -361,14 +340,8 @@ out %&gt;%
 ## $title
 ## [1] &quot;Cultivar X environment interactions in switchgrass&quot;
 ## 
-## $updated_at
-## NULL
-## 
 ## $url
 ## [1] &quot;http://crop.scijournals.org/cgi/content/abstract/43/6/2226&quot;
-## 
-## $user_id
-## NULL
 ## 
 ## $vol
 ## [1] 43
@@ -404,6 +377,9 @@ out %&gt;%
 ## 
 ## $state
 ## [1] &quot;&quot;
+## 
+## $time_zone
+## [1] &quot;Europe/Athens&quot;
 </code></pre>
 
 </body>

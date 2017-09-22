@@ -33,7 +33,7 @@ only get 5000 back.}
 \item{entrez_query}{(\code{character}; length 1) An Entrez-format query to filter results with.
 This is useful to search for sequences with specific characteristics. The format is the same
 as the one used to seach genbank.
-(\url{http://www.ncbi.nlm.nih.gov/books/NBK3837/#EntrezHelp.Entrez_Searching_Options})}
+(\url{https://www.ncbi.nlm.nih.gov/books/NBK3837/#EntrezHelp.Entrez_Searching_Options})}
 
 \item{hypothetical}{(\code{logical}; length 1) If \code{FALSE}, an attempt will be made to not
 return hypothetical or predicted sequences judging from accession number prefixs (XM and XR).
@@ -87,11 +87,10 @@ one <- ncbi_searcher(taxa = "Salmonella enterica", entrez_query="srcdb_refseq[PR
 two <- ncbi_searcher(taxa = "Salmonella enterica")
 }
 }
+\seealso{
+\code{\link[taxize]{ncbi_getbyid}}, \code{\link[taxize]{ncbi_getbyname}}
+}
 \author{
 Scott Chamberlain \email{myrmecocystus@gmail.com}, Zachary Foster
   \email{zacharyfoster1989@gmail.com}
 }
-\seealso{
-\code{\link[taxize]{ncbi_getbyid}}, \code{\link[taxize]{ncbi_getbyname}}
-}
-
