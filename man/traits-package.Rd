@@ -9,12 +9,12 @@
 Currently included in \code{traits} with the associated function name or
 function prefix:
 \itemize{
- \item BETYdb \url{http://www.betydb.org} - \code{betydb_}
+ \item BETYdb http://www.betydb.org - \code{betydb_}
  \item National Center for Biotechnology Information - NCBI
- \url{http://www.ncbi.nlm.nih.gov/} - \code{ncbi_}
+ http://www.ncbi.nlm.nih.gov/ - \code{ncbi_}
  \item Encyclopedia of Life Traitbank - \code{traitbank_}
- \item Coral Traits Database \url{http://coraltraits.org/} - \code{coral_}
- \item Birdlife International \url{http://rbg-web2.rbge.org.uk/FE/fe.html} -
+ \item Coral Traits Database https://coraltraits.org/ - \code{coral_}
+ \item Birdlife International https://www.birdlife.org/ -
  \code{birdlife_}
  \item LEDA Traitbase http://www.leda-traitbase.org/LEDAportal/index.jsp -
  \code{leda_}
@@ -41,14 +41,16 @@ coral_taxa(80)
 
 }
 \author{
-Ignasi Bartomeus \email{nacho.bartomeus@gmail.com}
-
-Zachary Foster \email{zacharyfoster1989@gmail.com}
-
-David LeBauer \email{dlebauer@gmail.com}
-
-David Harris \email{davharris@ucdavis.edu}
-
 Scott Chamberlain \email{myrmecocystus@gmail.com}
+
+Ignasi Bartomeus
+
+Zachary Foster
+
+David LeBauer
+
+David Harris
+
+Rupert Collins
 }
 \keyword{package}

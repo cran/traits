@@ -1,3 +1,24 @@
+traits 0.4.0
+============
+
+### NEW FEATURES
+
+* New package author: Chris Black (@infotroph) (#106) 
+* betydb functions now can do pagination (#94)
+* betydb functions gain progress parameter to optionally suppress the progress bar (#113)
+* EOL Traitbank completely changed their query interface - function no longer works as it did before. for now, you have to specify your own query that's rather complex, see docs for help. Later on we can try to simplify queries for users (#112)
+
+### MINOR IMPROVEMENTS
+
+* table in README for different sources and clarify what traits are (#110) (#111)
+* fixed link to Birdlife (#108)
+
+### BUG FIXES
+
+* fix to `ncbi_searcher()` to prevent failures in some cases (#107) thanks @zachary-foster
+* fix to `ncbi_byid()`: ten new fields added to the output (#101) (#102) thanks @boopsboops
+
+
 traits 0.3.0
 ============
 
@@ -14,6 +35,7 @@ See `?traits-defunct` for more information. Deprecated functions:
 data (#60)
 * Gains new function `tr_usda` for the USDA plants database (#61)
 * Gains new function `tr_zanne` for a dataset of plant growth data (#73)
+* BetyDB functions gain automatic paging of large requests where API supports it, i.e. not in v0 (#94)
 
 ### MINOR IMPROVEMENTS
 

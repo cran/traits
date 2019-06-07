@@ -3,12 +3,12 @@
 #' Currently included in \code{traits} with the associated function name or
 #' function prefix:
 #' \itemize{
-#'  \item BETYdb \url{http://www.betydb.org} - \code{betydb_}
+#'  \item BETYdb http://www.betydb.org - \code{betydb_}
 #'  \item National Center for Biotechnology Information - NCBI
-#'  \url{http://www.ncbi.nlm.nih.gov/} - \code{ncbi_}
+#'  http://www.ncbi.nlm.nih.gov/ - \code{ncbi_}
 #'  \item Encyclopedia of Life Traitbank - \code{traitbank_}
-#'  \item Coral Traits Database \url{http://coraltraits.org/} - \code{coral_}
-#'  \item Birdlife International \url{http://rbg-web2.rbge.org.uk/FE/fe.html} -
+#'  \item Coral Traits Database https://coraltraits.org/ - \code{coral_}
+#'  \item Birdlife International https://www.birdlife.org/ -
 #'  \code{birdlife_}
 #'  \item LEDA Traitbase http://www.leda-traitbase.org/LEDAportal/index.jsp -
 #'  \code{leda_}
@@ -35,6 +35,7 @@
 #' authenticate
 #' @importFrom crul HttpClient
 #' @importFrom jsonlite fromJSON
+#' @importFrom utils read.csv URLencode setTxtProgressBar txtProgressBar
 #' @importFrom xml2 read_xml xml_find_all xml_text
 #' @importFrom rvest html_table
 #' @importFrom taxize get_uid classification get_tsn itis_native iucn_id
@@ -44,11 +45,12 @@
 #' @name traits-package
 #' @aliases traits
 #' @docType package
-#' @author Ignasi Bartomeus \email{nacho.bartomeus@@gmail.com}
-#' @author Zachary Foster \email{zacharyfoster1989@@gmail.com}
-#' @author David LeBauer \email{dlebauer@@gmail.com}
-#' @author David Harris \email{davharris@@ucdavis.edu}
 #' @author Scott Chamberlain \email{myrmecocystus@@gmail.com}
+#' @author Ignasi Bartomeus
+#' @author Zachary Foster
+#' @author David LeBauer
+#' @author David Harris
+#' @author Rupert Collins
 #' @keywords package
 NULL
 

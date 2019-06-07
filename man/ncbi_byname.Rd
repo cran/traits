@@ -4,13 +4,14 @@
 \alias{ncbi_byname}
 \title{Retrieve gene sequences from NCBI by taxon name and gene names.}
 \usage{
-ncbi_byname(taxa, gene = "COI", seqrange = "1:3000", getrelated = FALSE,
-  verbose = TRUE, ...)
+ncbi_byname(taxa, gene = "COI", seqrange = "1:3000",
+  getrelated = FALSE, verbose = TRUE, ...)
 }
 \arguments{
 \item{taxa}{(character) Scientific name to search for.}
 
-\item{gene}{(character) Gene or genes (in a vector) to search for. See examples.}
+\item{gene}{(character) Gene or genes (in a vector) to search for.
+See examples.}
 
 \item{seqrange}{(character) Sequence range, as e.g., \code{"1:1000"}. This is the range of 
 sequence lengths to search for. So \code{"1:1000"} means search for sequences from 1 to 1000
@@ -47,7 +48,7 @@ ncbi_byname(taxa=species, gene = c("coi", "co1"), seqrange = "1:2000")
 }
 }
 \seealso{
-\code{\link[taxize]{ncbi_search}}, \code{\link[taxize]{ncbi_getbyid}}
+\code{\link{ncbi_searcher}}, \code{\link{ncbi_byid}}
 }
 \author{
 Scott Chamberlain \email{myrmecocystus@gmail.com}
