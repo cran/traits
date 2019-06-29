@@ -175,7 +175,7 @@ betydb_GET <- function(url, args = list(), key = NULL, user = NULL, pwd = NULL,
   if(api_version == 'v0'){
     txt <- betydb_http(url, args, key, user, pwd, ...)
     lst <- jsonlite::fromJSON(txt, simplifyVector = TRUE, flatten = TRUE)
-  } else if (api_version == 'beta'){
+  } else if (api_version %in% c('beta', 'v1')){
 
     if(is.null(args$limit)) {
       args$limit <- 200
@@ -365,7 +365,7 @@ betydb_experiment <- function(id, api_version = NULL, betyurl = NULL, fmt = "jso
 
 betydb_auth <- function(user,pwd,key){
   if (is.null(key) && is.null(user)) {
-    key <- getOption("betydb_key", NULL)
+    key <- getOption("betydb_key", '9999999999999999999999999999999999999999')
   }
   if (!is.null(key)) {
     auth <- list(key = key)
@@ -374,13 +374,6 @@ betydb_auth <- function(user,pwd,key){
     if (is.null(pwd)) pwd <- getOption("betydb_pwd", NULL)
     if (xor(is.null(user), is.null(pwd))) stop(warn, call. = FALSE)
     auth <- list(user = user, pwd = pwd, key = NULL)
-  }
-
-  if (is.null(c(auth$key, auth$user, auth$pwd))) {
-    # If no auth of any kind provided, use the ropensci-traits API key.
-    # TODO: Are there implementations that accept password but not key? If so:
-    # auth <- list(user <- 'ropensci-traits', pwd <- 'ropensci', key = NULL)
-    auth$key = "eI6TMmBl3IAb7v4ToWYzR0nZYY07shLiCikvT6Lv"
   }
   auth
 }

@@ -5,7 +5,7 @@ Description: Species trait data from many different sources, including
     from the USDA plants database, data from 'EOL' 'Traitbank', 
     Coral traits data (<https://coraltraits.org>), 'Birdlife' International, 
     and more.
-Version: 0.4.0
+Version: 0.4.2
 Authors@R: c(
     person("Scott", "Chamberlain", role = c("aut", "cre"), email = "myrmecocystus@gmail.com"),
     person("Zachary", "Foster", role = "aut"),
@@ -28,7 +28,7 @@ Imports: jsonlite (>= 0.9.19), httr (>= 1.1.0), crul (>= 0.6.0), tibble
 Suggests: roxygen2 (>= 6.0.1), knitr, testthat, dplyr, plyr
 RoxygenNote: 6.1.1
 NeedsCompilation: no
-Packaged: 2019-06-07 21:23:39 UTC; sckott
+Packaged: 2019-06-29 01:25:29 UTC; sckott
 Author: Scott Chamberlain [aut, cre],
   Zachary Foster [aut],
   Ignasi Bartomeus [aut],
@@ -38,4 +38,4 @@ Author: Scott Chamberlain [aut, cre],
   Rupert Collins [ctb]
 Maintainer: Scott Chamberlain <myrmecocystus@gmail.com>
 Repository: CRAN
-Date/Publication: 2019-06-07 21:50:06 UTC
+Date/Publication: 2019-06-29 05:00:03 UTC

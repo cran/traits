@@ -1,8 +1,8 @@
-0641f58fc5562382456de01f688e0f9b *DESCRIPTION
+20c23245ca0ddfcb1c201c227cdf229a *DESCRIPTION
 de9532c5aeb8082a5fc9cbee02186d6f *LICENSE
 c6416f8e0e9330e694bcfb9414633e1d *NAMESPACE
-896ac8c8a82e26664995208abce71a70 *NEWS.md
-673cf1881eda44d57345f0d0582126ca *R/betydb.R
+cb3e3820f7b2598aeea93351b7c71cec *NEWS.md
+44c08b699ba273060bec663ef1700352 *R/betydb.R
 d5c8fc7e95a0b93e70c7ee1e25b447ce *R/birdlife.R
 aa26187e586185a5b06e2de0ee8c0afa *R/caching.R
 c59145f425da7386e0d7fe8c39d94ce2 *R/coral.R
@@ -14,9 +14,9 @@ c58963c7894461f11fdd4c1cd388b42e *R/is_native.R
 c2b2a681f9b2db79bfb845359a373c6d *R/leda.R
 aff620a2bb67810bbbf8f906dfe6eac5 *R/ncbi_byid.R
 2f86e436eb25c16de22e45c3ed0c60b9 *R/ncbi_byname.R
-8520041f3ff3be562a214dee7cc463a9 *R/ncbi_searcher.R
+737688f17d9c98e45e5af02271bbb37e *R/ncbi_searcher.R
 716efb2fec43ce9f903a8a026eae77ca *R/on_load.R
-25f5243aecfc5c698ae20ce6ac582a38 *R/taxa_search.R
+1a7b5fb0c8837edda2ac711b4f13142b *R/taxa_search.R
 9d622b0e08f0a2a2f2b421c5e7554d7f *R/tr_ernest.R
 2a072c8bc764200230aa2086f63f734d *R/tr_usda.R
 cb4d6b9436b41687040fbe2567e7c60a *R/tr_zanne.R
@@ -51,7 +51,7 @@ b868172a99469bbfd513c8a57ec5838a *man/ncbi_byid.Rd
 4b2f7888d2a095f00a9a5332ffcf03eb *man/ncbi_byname.Rd
 b6b8480ad5876d32e726c96cf58a14d4 *man/ncbi_searcher.Rd
 90fd7c25ad6ffae59a0d58356f85bb32 *man/plantatt.Rd
-accd9ff176f66989aea8d04b8da23e0c *man/taxa_search.Rd
+be23db10272088a47cc4ce249d697735 *man/taxa_search.Rd
 b608554a9b1edfeb947741cc8803ca22 *man/tr_ernest.Rd
 cba8ffbbe82ee3d585396923e8c21b2f *man/tr_usda.Rd
 17ef231bfdb658d6d78fe9b5a6a97491 *man/tr_zanne.Rd
