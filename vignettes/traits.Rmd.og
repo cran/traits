@@ -1,21 +1,23 @@
-<!--
-%\VignetteEngine{knitr::knitr}
-%\VignetteIndexEntry{traits Intro}
-%\VignetteEncoding{UTF-8}
--->
+---
+title: traits introduction
+author: Scott Chamberlain
+date: "`r Sys.Date()`"
+output: rmarkdown::html_vignette
+vignette: >
+    %\VignetteIndexEntry{traits introduction}
+    %\VignetteEngine{knitr::rmarkdown}
+    %\VignetteEncoding{UTF-8}
+---
 
 ```{r echo=FALSE}
 knitr::opts_chunk$set(
   comment = "#>",
   collapse = TRUE,
   warning = FALSE,
-  message = FALSE,
-  cache.path = "vigncache/"
+  message = FALSE
 )
 ```
 
-`traits` introduction
-=====================
 
 ```{r}
 library("traits")
@@ -64,26 +66,6 @@ head(out)
 
 ```{r}
 traitbank(query = "MATCH (n:Trait) RETURN n LIMIT 1;")
-```
-
-## Coral
-
-Get the species list and their ids
-
-```{r}
-coral_species()
-```
-
-Get data by taxon
-
-```{r}
-coral_taxa(80)
-```
-
-Get data by trait
-
-```{r}
-coral_traits(105)
 ```
 
 ## Birdlife International

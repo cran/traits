@@ -1,3 +1,21 @@
+traits 0.5.0
+============
+
+### DEFUNCT
+
+* `tr_usda()` is defunct. The API is down for good (#122)
+* all `coral_*` functions are defunct (#124)
+
+### MINOR IMPROVEMENTS
+
+* replace httr with crul (#89)
+* fix BETYdb tess (#123)
+
+### BUG FIXES
+
+* `ncbi_searcher()` fix: we weren't including the NCBI Entrez API key even when it was found  (#120)
+
+
 traits 0.4.2
 ============
 

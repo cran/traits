@@ -1,35 +1,20 @@
 #' traits - Species trait data from around the web
 #'
-#' Currently included in \code{traits} with the associated function name or
+#' Currently included in `traits` with the associated function name or
 #' function prefix:
-#' \itemize{
-#'  \item BETYdb http://www.betydb.org - \code{betydb_}
-#'  \item National Center for Biotechnology Information - NCBI
-#'  http://www.ncbi.nlm.nih.gov/ - \code{ncbi_}
-#'  \item Encyclopedia of Life Traitbank - \code{traitbank_}
-#'  \item Coral Traits Database https://coraltraits.org/ - \code{coral_}
-#'  \item Birdlife International https://www.birdlife.org/ -
-#'  \code{birdlife_}
-#'  \item LEDA Traitbase http://www.leda-traitbase.org/LEDAportal/index.jsp -
-#'  \code{leda_}
-#'  \item USDA Plants Database - \code{\link{tr_usda}}
-#'  \item Zanne et al. plant dataset - \code{\link{tr_zanne}}
-#'  \item Amniote life history dataset - \code{\link{tr_ernest}}
-#'  \item More to come ...
-#' }
 #'
-#' See also \code{\link{traits-defunct}}
+#' - BETYdb http://www.betydb.org - `betydb_`
+#' - National Center for Biotechnology Information - NCBI
+#'  http://www.ncbi.nlm.nih.gov/ - `ncbi_`
+#' - Encyclopedia of Life Traitbank - `traitbank_`
+#' - Birdlife International https://www.birdlife.org/ -
+#'  `birdlife_`
+#' - LEDA Traitbase http://www.leda-traitbase.org/LEDAportal/index.jsp -
+#'  `leda_`
+#' - Zanne et al. plant dataset - [tr_zanne()]
+#' - Amniote life history dataset - [tr_ernest()]
 #'
-#' @examples \dontrun{
-#' library("traits")
-#'
-#' ## Search the Coral database
-#' ## Get the species list and their ids
-#' coral_species()
-#'
-#' ## Get data by taxon
-#' coral_taxa(80)
-#' }
+#' See also [traits-defunct]
 #'
 #' @importFrom httr GET POST content stop_for_status warn_for_status
 #' authenticate
@@ -45,7 +30,7 @@
 #' @name traits-package
 #' @aliases traits
 #' @docType package
-#' @author Scott Chamberlain \email{myrmecocystus@@gmail.com}
+#' @author Scott Chamberlain
 #' @author Ignasi Bartomeus
 #' @author Zachary Foster
 #' @author David LeBauer

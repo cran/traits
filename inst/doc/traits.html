@@ -1,559 +1,582 @@
 <!DOCTYPE html>
+
 <html>
+
 <head>
-<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
 
-<title><code>traits</code> introduction</title>
+<meta charset="utf-8" />
+<meta name="generator" content="pandoc" />
+<meta http-equiv="X-UA-Compatible" content="IE=EDGE" />
 
-<script type="text/javascript">
-window.onload = function() {
-  var imgs = document.getElementsByTagName('img'), i, img;
-  for (i = 0; i < imgs.length; i++) {
-    img = imgs[i];
-    // center an image if it is the only element of its parent
-    if (img.parentElement.childElementCount === 1)
-      img.parentElement.style.textAlign = 'center';
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+
+<meta name="author" content="Scott Chamberlain" />
+
+<meta name="date" content="2020-08-25" />
+
+<title>traits introduction</title>
+
+<script>// Hide empty <a> tag within highlighted CodeBlock for screen reader accessibility (see https://github.com/jgm/pandoc/issues/6352#issuecomment-626106786) -->
+// v0.0.1
+// Written by JooYoung Seo (jooyoung@psu.edu) and Atsushi Yasumoto on June 1st, 2020.
+
+document.addEventListener('DOMContentLoaded', function() {
+  const codeList = document.getElementsByClassName("sourceCode");
+  for (var i = 0; i < codeList.length; i++) {
+    var linkList = codeList[i].getElementsByTagName('a');
+    for (var j = 0; j < linkList.length; j++) {
+      if (linkList[j].innerHTML === "") {
+        linkList[j].setAttribute('aria-hidden', 'true');
+      }
+    }
   }
-};
+});
 </script>
 
-<!-- Styles for R syntax highlighter -->
-<style type="text/css">
-   pre .operator,
-   pre .paren {
-     color: rgb(104, 118, 135)
-   }
 
-   pre .literal {
-     color: #990073
-   }
+<style type="text/css">code{white-space: pre;}</style>
+<style type="text/css" data-origin="pandoc">
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+    color: #aaaaaa;
+  }
+pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+code span.al { color: #ff0000; font-weight: bold; } /* Alert */
+code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+code span.at { color: #7d9029; } /* Attribute */
+code span.bn { color: #40a070; } /* BaseN */
+code span.bu { } /* BuiltIn */
+code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+code span.ch { color: #4070a0; } /* Char */
+code span.cn { color: #880000; } /* Constant */
+code span.co { color: #60a0b0; font-style: italic; } /* Comment */
+code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+code span.do { color: #ba2121; font-style: italic; } /* Documentation */
+code span.dt { color: #902000; } /* DataType */
+code span.dv { color: #40a070; } /* DecVal */
+code span.er { color: #ff0000; font-weight: bold; } /* Error */
+code span.ex { } /* Extension */
+code span.fl { color: #40a070; } /* Float */
+code span.fu { color: #06287e; } /* Function */
+code span.im { } /* Import */
+code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+code span.kw { color: #007020; font-weight: bold; } /* Keyword */
+code span.op { color: #666666; } /* Operator */
+code span.ot { color: #007020; } /* Other */
+code span.pp { color: #bc7a00; } /* Preprocessor */
+code span.sc { color: #4070a0; } /* SpecialChar */
+code span.ss { color: #bb6688; } /* SpecialString */
+code span.st { color: #4070a0; } /* String */
+code span.va { color: #19177c; } /* Variable */
+code span.vs { color: #4070a0; } /* VerbatimString */
+code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
 
-   pre .number {
-     color: #099;
-   }
-
-   pre .comment {
-     color: #998;
-     font-style: italic
-   }
-
-   pre .keyword {
-     color: #900;
-     font-weight: bold
-   }
-
-   pre .identifier {
-     color: rgb(0, 0, 0);
-   }
-
-   pre .string {
-     color: #d14;
-   }
 </style>
-
-<!-- R syntax highlighter -->
-<script type="text/javascript">
-var hljs=new function(){function m(p){return p.replace(/&/gm,"&amp;").replace(/</gm,"&lt;")}function f(r,q,p){return RegExp(q,"m"+(r.cI?"i":"")+(p?"g":""))}function b(r){for(var p=0;p<r.childNodes.length;p++){var q=r.childNodes[p];if(q.nodeName=="CODE"){return q}if(!(q.nodeType==3&&q.nodeValue.match(/\s+/))){break}}}function h(t,s){var p="";for(var r=0;r<t.childNodes.length;r++){if(t.childNodes[r].nodeType==3){var q=t.childNodes[r].nodeValue;if(s){q=q.replace(/\n/g,"")}p+=q}else{if(t.childNodes[r].nodeName=="BR"){p+="\n"}else{p+=h(t.childNodes[r])}}}if(/MSIE [678]/.test(navigator.userAgent)){p=p.replace(/\r/g,"\n")}return p}function a(s){var r=s.className.split(/\s+/);r=r.concat(s.parentNode.className.split(/\s+/));for(var q=0;q<r.length;q++){var p=r[q].replace(/^language-/,"");if(e[p]){return p}}}function c(q){var p=[];(function(s,t){for(var r=0;r<s.childNodes.length;r++){if(s.childNodes[r].nodeType==3){t+=s.childNodes[r].nodeValue.length}else{if(s.childNodes[r].nodeName=="BR"){t+=1}else{if(s.childNodes[r].nodeType==1){p.push({event:"start",offset:t,node:s.childNodes[r]});t=arguments.callee(s.childNodes[r],t);p.push({event:"stop",offset:t,node:s.childNodes[r]})}}}}return t})(q,0);return p}function k(y,w,x){var q=0;var z="";var s=[];function u(){if(y.length&&w.length){if(y[0].offset!=w[0].offset){return(y[0].offset<w[0].offset)?y:w}else{return w[0].event=="start"?y:w}}else{return y.length?y:w}}function t(D){var A="<"+D.nodeName.toLowerCase();for(var B=0;B<D.attributes.length;B++){var C=D.attributes[B];A+=" "+C.nodeName.toLowerCase();if(C.value!==undefined&&C.value!==false&&C.value!==null){A+='="'+m(C.value)+'"'}}return A+">"}while(y.length||w.length){var v=u().splice(0,1)[0];z+=m(x.substr(q,v.offset-q));q=v.offset;if(v.event=="start"){z+=t(v.node);s.push(v.node)}else{if(v.event=="stop"){var p,r=s.length;do{r--;p=s[r];z+=("</"+p.nodeName.toLowerCase()+">")}while(p!=v.node);s.splice(r,1);while(r<s.length){z+=t(s[r]);r++}}}}return z+m(x.substr(q))}function j(){function q(x,y,v){if(x.compiled){return}var u;var s=[];if(x.k){x.lR=f(y,x.l||hljs.IR,true);for(var w in x.k){if(!x.k.hasOwnProperty(w)){continue}if(x.k[w] instanceof Object){u=x.k[w]}else{u=x.k;w="keyword"}for(var r in u){if(!u.hasOwnProperty(r)){continue}x.k[r]=[w,u[r]];s.push(r)}}}if(!v){if(x.bWK){x.b="\\b("+s.join("|")+")\\s"}x.bR=f(y,x.b?x.b:"\\B|\\b");if(!x.e&&!x.eW){x.e="\\B|\\b"}if(x.e){x.eR=f(y,x.e)}}if(x.i){x.iR=f(y,x.i)}if(x.r===undefined){x.r=1}if(!x.c){x.c=[]}x.compiled=true;for(var t=0;t<x.c.length;t++){if(x.c[t]=="self"){x.c[t]=x}q(x.c[t],y,false)}if(x.starts){q(x.starts,y,false)}}for(var p in e){if(!e.hasOwnProperty(p)){continue}q(e[p].dM,e[p],true)}}function d(B,C){if(!j.called){j();j.called=true}function q(r,M){for(var L=0;L<M.c.length;L++){if((M.c[L].bR.exec(r)||[null])[0]==r){return M.c[L]}}}function v(L,r){if(D[L].e&&D[L].eR.test(r)){return 1}if(D[L].eW){var M=v(L-1,r);return M?M+1:0}return 0}function w(r,L){return L.i&&L.iR.test(r)}function K(N,O){var M=[];for(var L=0;L<N.c.length;L++){M.push(N.c[L].b)}var r=D.length-1;do{if(D[r].e){M.push(D[r].e)}r--}while(D[r+1].eW);if(N.i){M.push(N.i)}return f(O,M.join("|"),true)}function p(M,L){var N=D[D.length-1];if(!N.t){N.t=K(N,E)}N.t.lastIndex=L;var r=N.t.exec(M);return r?[M.substr(L,r.index-L),r[0],false]:[M.substr(L),"",true]}function z(N,r){var L=E.cI?r[0].toLowerCase():r[0];var M=N.k[L];if(M&&M instanceof Array){return M}return false}function F(L,P){L=m(L);if(!P.k){return L}var r="";var O=0;P.lR.lastIndex=0;var M=P.lR.exec(L);while(M){r+=L.substr(O,M.index-O);var N=z(P,M);if(N){x+=N[1];r+='<span class="'+N[0]+'">'+M[0]+"</span>"}else{r+=M[0]}O=P.lR.lastIndex;M=P.lR.exec(L)}return r+L.substr(O,L.length-O)}function J(L,M){if(M.sL&&e[M.sL]){var r=d(M.sL,L);x+=r.keyword_count;return r.value}else{return F(L,M)}}function I(M,r){var L=M.cN?'<span class="'+M.cN+'">':"";if(M.rB){y+=L;M.buffer=""}else{if(M.eB){y+=m(r)+L;M.buffer=""}else{y+=L;M.buffer=r}}D.push(M);A+=M.r}function G(N,M,Q){var R=D[D.length-1];if(Q){y+=J(R.buffer+N,R);return false}var P=q(M,R);if(P){y+=J(R.buffer+N,R);I(P,M);return P.rB}var L=v(D.length-1,M);if(L){var O=R.cN?"</span>":"";if(R.rE){y+=J(R.buffer+N,R)+O}else{if(R.eE){y+=J(R.buffer+N,R)+O+m(M)}else{y+=J(R.buffer+N+M,R)+O}}while(L>1){O=D[D.length-2].cN?"</span>":"";y+=O;L--;D.length--}var r=D[D.length-1];D.length--;D[D.length-1].buffer="";if(r.starts){I(r.starts,"")}return R.rE}if(w(M,R)){throw"Illegal"}}var E=e[B];var D=[E.dM];var A=0;var x=0;var y="";try{var s,u=0;E.dM.buffer="";do{s=p(C,u);var t=G(s[0],s[1],s[2]);u+=s[0].length;if(!t){u+=s[1].length}}while(!s[2]);if(D.length>1){throw"Illegal"}return{r:A,keyword_count:x,value:y}}catch(H){if(H=="Illegal"){return{r:0,keyword_count:0,value:m(C)}}else{throw H}}}function g(t){var p={keyword_count:0,r:0,value:m(t)};var r=p;for(var q in e){if(!e.hasOwnProperty(q)){continue}var s=d(q,t);s.language=q;if(s.keyword_count+s.r>r.keyword_count+r.r){r=s}if(s.keyword_count+s.r>p.keyword_count+p.r){r=p;p=s}}if(r.language){p.second_best=r}return p}function i(r,q,p){if(q){r=r.replace(/^((<[^>]+>|\t)+)/gm,function(t,w,v,u){return w.replace(/\t/g,q)})}if(p){r=r.replace(/\n/g,"<br>")}return r}function n(t,w,r){var x=h(t,r);var v=a(t);var y,s;if(v){y=d(v,x)}else{return}var q=c(t);if(q.length){s=document.createElement("pre");s.innerHTML=y.value;y.value=k(q,c(s),x)}y.value=i(y.value,w,r);var u=t.className;if(!u.match("(\\s|^)(language-)?"+v+"(\\s|$)")){u=u?(u+" "+v):v}if(/MSIE [678]/.test(navigator.userAgent)&&t.tagName=="CODE"&&t.parentNode.tagName=="PRE"){s=t.parentNode;var p=document.createElement("div");p.innerHTML="<pre><code>"+y.value+"</code></pre>";t=p.firstChild.firstChild;p.firstChild.cN=s.cN;s.parentNode.replaceChild(p.firstChild,s)}else{t.innerHTML=y.value}t.className=u;t.result={language:v,kw:y.keyword_count,re:y.r};if(y.second_best){t.second_best={language:y.second_best.language,kw:y.second_best.keyword_count,re:y.second_best.r}}}function o(){if(o.called){return}o.called=true;var r=document.getElementsByTagName("pre");for(var p=0;p<r.length;p++){var q=b(r[p]);if(q){n(q,hljs.tabReplace)}}}function l(){if(window.addEventListener){window.addEventListener("DOMContentLoaded",o,false);window.addEventListener("load",o,false)}else{if(window.attachEvent){window.attachEvent("onload",o)}else{window.onload=o}}}var e={};this.LANGUAGES=e;this.highlight=d;this.highlightAuto=g;this.fixMarkup=i;this.highlightBlock=n;this.initHighlighting=o;this.initHighlightingOnLoad=l;this.IR="[a-zA-Z][a-zA-Z0-9_]*";this.UIR="[a-zA-Z_][a-zA-Z0-9_]*";this.NR="\\b\\d+(\\.\\d+)?";this.CNR="\\b(0[xX][a-fA-F0-9]+|(\\d+(\\.\\d*)?|\\.\\d+)([eE][-+]?\\d+)?)";this.BNR="\\b(0b[01]+)";this.RSR="!|!=|!==|%|%=|&|&&|&=|\\*|\\*=|\\+|\\+=|,|\\.|-|-=|/|/=|:|;|<|<<|<<=|<=|=|==|===|>|>=|>>|>>=|>>>|>>>=|\\?|\\[|\\{|\\(|\\^|\\^=|\\||\\|=|\\|\\||~";this.ER="(?![\\s\\S])";this.BE={b:"\\\\.",r:0};this.ASM={cN:"string",b:"'",e:"'",i:"\\n",c:[this.BE],r:0};this.QSM={cN:"string",b:'"',e:'"',i:"\\n",c:[this.BE],r:0};this.CLCM={cN:"comment",b:"//",e:"$"};this.CBLCLM={cN:"comment",b:"/\\*",e:"\\*/"};this.HCM={cN:"comment",b:"#",e:"$"};this.NM={cN:"number",b:this.NR,r:0};this.CNM={cN:"number",b:this.CNR,r:0};this.BNM={cN:"number",b:this.BNR,r:0};this.inherit=function(r,s){var p={};for(var q in r){p[q]=r[q]}if(s){for(var q in s){p[q]=s[q]}}return p}}();hljs.LANGUAGES.cpp=function(){var a={keyword:{"false":1,"int":1,"float":1,"while":1,"private":1,"char":1,"catch":1,"export":1,virtual:1,operator:2,sizeof:2,dynamic_cast:2,typedef:2,const_cast:2,"const":1,struct:1,"for":1,static_cast:2,union:1,namespace:1,unsigned:1,"long":1,"throw":1,"volatile":2,"static":1,"protected":1,bool:1,template:1,mutable:1,"if":1,"public":1,friend:2,"do":1,"return":1,"goto":1,auto:1,"void":2,"enum":1,"else":1,"break":1,"new":1,extern:1,using:1,"true":1,"class":1,asm:1,"case":1,typeid:1,"short":1,reinterpret_cast:2,"default":1,"double":1,register:1,explicit:1,signed:1,typename:1,"try":1,"this":1,"switch":1,"continue":1,wchar_t:1,inline:1,"delete":1,alignof:1,char16_t:1,char32_t:1,constexpr:1,decltype:1,noexcept:1,nullptr:1,static_assert:1,thread_local:1,restrict:1,_Bool:1,complex:1},built_in:{std:1,string:1,cin:1,cout:1,cerr:1,clog:1,stringstream:1,istringstream:1,ostringstream:1,auto_ptr:1,deque:1,list:1,queue:1,stack:1,vector:1,map:1,set:1,bitset:1,multiset:1,multimap:1,unordered_set:1,unordered_map:1,unordered_multiset:1,unordered_multimap:1,array:1,shared_ptr:1}};return{dM:{k:a,i:"</",c:[hljs.CLCM,hljs.CBLCLM,hljs.QSM,{cN:"string",b:"'\\\\?.",e:"'",i:"."},{cN:"number",b:"\\b(\\d+(\\.\\d*)?|\\.\\d+)(u|U|l|L|ul|UL|f|F)"},hljs.CNM,{cN:"preprocessor",b:"#",e:"$"},{cN:"stl_container",b:"\\b(deque|list|queue|stack|vector|map|set|bitset|multiset|multimap|unordered_map|unordered_set|unordered_multiset|unordered_multimap|array)\\s*<",e:">",k:a,r:10,c:["self"]}]}}}();hljs.LANGUAGES.r={dM:{c:[hljs.HCM,{cN:"number",b:"\\b0[xX][0-9a-fA-F]+[Li]?\\b",e:hljs.IMMEDIATE_RE,r:0},{cN:"number",b:"\\b\\d+(?:[eE][+\\-]?\\d*)?L\\b",e:hljs.IMMEDIATE_RE,r:0},{cN:"number",b:"\\b\\d+\\.(?!\\d)(?:i\\b)?",e:hljs.IMMEDIATE_RE,r:1},{cN:"number",b:"\\b\\d+(?:\\.\\d*)?(?:[eE][+\\-]?\\d*)?i?\\b",e:hljs.IMMEDIATE_RE,r:0},{cN:"number",b:"\\.\\d+(?:[eE][+\\-]?\\d*)?i?\\b",e:hljs.IMMEDIATE_RE,r:1},{cN:"keyword",b:"(?:tryCatch|library|setGeneric|setGroupGeneric)\\b",e:hljs.IMMEDIATE_RE,r:10},{cN:"keyword",b:"\\.\\.\\.",e:hljs.IMMEDIATE_RE,r:10},{cN:"keyword",b:"\\.\\.\\d+(?![\\w.])",e:hljs.IMMEDIATE_RE,r:10},{cN:"keyword",b:"\\b(?:function)",e:hljs.IMMEDIATE_RE,r:2},{cN:"keyword",b:"(?:if|in|break|next|repeat|else|for|return|switch|while|try|stop|warning|require|attach|detach|source|setMethod|setClass)\\b",e:hljs.IMMEDIATE_RE,r:1},{cN:"literal",b:"(?:NA|NA_integer_|NA_real_|NA_character_|NA_complex_)\\b",e:hljs.IMMEDIATE_RE,r:10},{cN:"literal",b:"(?:NULL|TRUE|FALSE|T|F|Inf|NaN)\\b",e:hljs.IMMEDIATE_RE,r:1},{cN:"identifier",b:"[a-zA-Z.][a-zA-Z0-9._]*\\b",e:hljs.IMMEDIATE_RE,r:0},{cN:"operator",b:"<\\-(?!\\s*\\d)",e:hljs.IMMEDIATE_RE,r:2},{cN:"operator",b:"\\->|<\\-",e:hljs.IMMEDIATE_RE,r:1},{cN:"operator",b:"%%|~",e:hljs.IMMEDIATE_RE},{cN:"operator",b:">=|<=|==|!=|\\|\\||&&|=|\\+|\\-|\\*|/|\\^|>|<|!|&|\\||\\$|:",e:hljs.IMMEDIATE_RE,r:0},{cN:"operator",b:"%",e:"%",i:"\\n",r:1},{cN:"identifier",b:"`",e:"`",r:0},{cN:"string",b:'"',e:'"',c:[hljs.BE],r:0},{cN:"string",b:"'",e:"'",c:[hljs.BE],r:0},{cN:"paren",b:"[[({\\])}]",e:hljs.IMMEDIATE_RE,r:0}]}};
-hljs.initHighlightingOnLoad();
+<script>
+// apply pandoc div.sourceCode style to pre.sourceCode instead
+(function() {
+  var sheets = document.styleSheets;
+  for (var i = 0; i < sheets.length; i++) {
+    if (sheets[i].ownerNode.dataset["origin"] !== "pandoc") continue;
+    try { var rules = sheets[i].cssRules; } catch (e) { continue; }
+    for (var j = 0; j < rules.length; j++) {
+      var rule = rules[j];
+      // check if there is a div.sourceCode rule
+      if (rule.type !== rule.STYLE_RULE || rule.selectorText !== "div.sourceCode") continue;
+      var style = rule.style.cssText;
+      // check if color or background-color is set
+      if (rule.style.color === '' && rule.style.backgroundColor === '') continue;
+      // replace div.sourceCode by a pre.sourceCode rule
+      sheets[i].deleteRule(j);
+      sheets[i].insertRule('pre.sourceCode{' + style + '}', j);
+    }
+  }
+})();
 </script>
 
 
 
-<style type="text/css">
-body, td {
-   font-family: sans-serif;
-   background-color: white;
-   font-size: 13px;
+<style type="text/css">body {
+background-color: #fff;
+margin: 1em auto;
+max-width: 700px;
+overflow: visible;
+padding-left: 2em;
+padding-right: 2em;
+font-family: "Open Sans", "Helvetica Neue", Helvetica, Arial, sans-serif;
+font-size: 14px;
+line-height: 1.35;
 }
-
-body {
-  max-width: 800px;
-  margin: auto;
-  padding: 1em;
-  line-height: 20px;
+#TOC {
+clear: both;
+margin: 0 0 10px 10px;
+padding: 4px;
+width: 400px;
+border: 1px solid #CCCCCC;
+border-radius: 5px;
+background-color: #f6f6f6;
+font-size: 13px;
+line-height: 1.3;
 }
-
-tt, code, pre {
-   font-family: 'DejaVu Sans Mono', 'Droid Sans Mono', 'Lucida Console', Consolas, Monaco, monospace;
+#TOC .toctitle {
+font-weight: bold;
+font-size: 15px;
+margin-left: 5px;
 }
-
-h1 {
-   font-size:2.2em;
+#TOC ul {
+padding-left: 40px;
+margin-left: -1.5em;
+margin-top: 5px;
+margin-bottom: 5px;
 }
-
-h2 {
-   font-size:1.8em;
+#TOC ul ul {
+margin-left: -2em;
 }
-
-h3 {
-   font-size:1.4em;
+#TOC li {
+line-height: 16px;
 }
-
-h4 {
-   font-size:1.0em;
+table {
+margin: 1em auto;
+border-width: 1px;
+border-color: #DDDDDD;
+border-style: outset;
+border-collapse: collapse;
 }
-
-h5 {
-   font-size:0.9em;
+table th {
+border-width: 2px;
+padding: 5px;
+border-style: inset;
 }
-
-h6 {
-   font-size:0.8em;
+table td {
+border-width: 1px;
+border-style: inset;
+line-height: 18px;
+padding: 5px 5px;
 }
-
-a:visited {
-   color: rgb(50%, 0%, 50%);
+table, table th, table td {
+border-left-style: none;
+border-right-style: none;
 }
-
-pre, img {
-  max-width: 100%;
+table thead, table tr.even {
+background-color: #f7f7f7;
+}
+p {
+margin: 0.5em 0;
+}
+blockquote {
+background-color: #f6f6f6;
+padding: 0.25em 0.75em;
+}
+hr {
+border-style: solid;
+border: none;
+border-top: 1px solid #777;
+margin: 28px 0;
+}
+dl {
+margin-left: 0;
+}
+dl dd {
+margin-bottom: 13px;
+margin-left: 13px;
+}
+dl dt {
+font-weight: bold;
+}
+ul {
+margin-top: 0;
+}
+ul li {
+list-style: circle outside;
+}
+ul ul {
+margin-bottom: 0;
+}
+pre, code {
+background-color: #f7f7f7;
+border-radius: 3px;
+color: #333;
+white-space: pre-wrap; 
 }
 pre {
-  overflow-x: auto;
+border-radius: 3px;
+margin: 5px 0px 10px 0px;
+padding: 10px;
 }
-pre code {
-   display: block; padding: 0.5em;
+pre:not([class]) {
+background-color: #f7f7f7;
 }
-
 code {
-  font-size: 92%;
-  border: 1px solid #ccc;
+font-family: Consolas, Monaco, 'Courier New', monospace;
+font-size: 85%;
 }
-
-code[class] {
-  background-color: #F8F8F8;
+p > code, li > code {
+padding: 2px 0px;
 }
-
-table, td, th {
-  border: none;
+div.figure {
+text-align: center;
 }
-
-blockquote {
-   color:#666666;
-   margin:0;
-   padding-left: 1em;
-   border-left: 0.5em #EEE solid;
+img {
+background-color: #FFFFFF;
+padding: 2px;
+border: 1px solid #DDDDDD;
+border-radius: 3px;
+border: 1px solid #CCCCCC;
+margin: 0 5px;
 }
-
-hr {
-   height: 0px;
-   border-bottom: none;
-   border-top-width: thin;
-   border-top-style: dotted;
-   border-top-color: #999999;
+h1 {
+margin-top: 0;
+font-size: 35px;
+line-height: 40px;
 }
-
-@media print {
-   * {
-      background: transparent !important;
-      color: black !important;
-      filter:none !important;
-      -ms-filter: none !important;
-   }
-
-   body {
-      font-size:12pt;
-      max-width:100%;
-   }
-
-   a, a:visited {
-      text-decoration: underline;
-   }
-
-   hr {
-      visibility: hidden;
-      page-break-before: always;
-   }
-
-   pre, blockquote {
-      padding-right: 1em;
-      page-break-inside: avoid;
-   }
-
-   tr, img {
-      page-break-inside: avoid;
-   }
-
-   img {
-      max-width: 100% !important;
-   }
-
-   @page :left {
-      margin: 15mm 20mm 15mm 10mm;
-   }
-
-   @page :right {
-      margin: 15mm 10mm 15mm 20mm;
-   }
-
-   p, h2, h3 {
-      orphans: 3; widows: 3;
-   }
-
-   h2, h3 {
-      page-break-after: avoid;
-   }
+h2 {
+border-bottom: 4px solid #f7f7f7;
+padding-top: 10px;
+padding-bottom: 2px;
+font-size: 145%;
 }
+h3 {
+border-bottom: 2px solid #f7f7f7;
+padding-top: 10px;
+font-size: 120%;
+}
+h4 {
+border-bottom: 1px solid #f7f7f7;
+margin-left: 8px;
+font-size: 105%;
+}
+h5, h6 {
+border-bottom: 1px solid #ccc;
+font-size: 105%;
+}
+a {
+color: #0033dd;
+text-decoration: none;
+}
+a:hover {
+color: #6666ff; }
+a:visited {
+color: #800080; }
+a:visited:hover {
+color: #BB00BB; }
+a[href^="http:"] {
+text-decoration: underline; }
+a[href^="https:"] {
+text-decoration: underline; }
+
+code > span.kw { color: #555; font-weight: bold; } 
+code > span.dt { color: #902000; } 
+code > span.dv { color: #40a070; } 
+code > span.bn { color: #d14; } 
+code > span.fl { color: #d14; } 
+code > span.ch { color: #d14; } 
+code > span.st { color: #d14; } 
+code > span.co { color: #888888; font-style: italic; } 
+code > span.ot { color: #007020; } 
+code > span.al { color: #ff0000; font-weight: bold; } 
+code > span.fu { color: #900; font-weight: bold; } 
+code > span.er { color: #a61717; background-color: #e3d2d2; } 
 </style>
+
 
 
 
 </head>
 
 <body>
-<!--
-%\VignetteEngine{knitr::knitr}
-%\VignetteIndexEntry{traits Intro}
-%\VignetteEncoding{UTF-8}
--->
 
-<h1><code>traits</code> introduction</h1>
 
-<pre><code class="r">library(&quot;traits&quot;)
-</code></pre>
 
+
+<h1 class="title toc-ignore">traits introduction</h1>
+<h4 class="author">Scott Chamberlain</h4>
+<h4 class="date">2020-08-25</h4>
+
+
+
+<div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1"></a><span class="kw">library</span>(<span class="st">&quot;traits&quot;</span>)</span></code></pre></div>
+<div id="betydb" class="section level2">
 <h2>BetyDB</h2>
-
 <p>Get trait data for Willow (<em>Salix</em> spp.)</p>
-
-<pre><code class="r">(salix &lt;- betydb_search(&quot;Salix Vcmax&quot;))
-#&gt; # A tibble: 14 x 36
-#&gt;    checked result_type    id citation_id site_id treatment_id sitename
-#&gt;      &lt;int&gt; &lt;chr&gt;       &lt;int&gt;       &lt;int&gt;   &lt;int&gt;        &lt;int&gt; &lt;chr&gt;   
-#&gt;  1       1 traits      39217         430     645         1342 &quot;&quot;      
-#&gt;  2       1 traits      39218         430     645         1343 &quot;&quot;      
-#&gt;  3       1 traits      39219         430     645         1344 &quot;&quot;      
-#&gt;  4       1 traits      39220         430     645         1345 &quot;&quot;      
-#&gt;  5       1 traits      25405          51      NA            1 &lt;NA&gt;    
-#&gt;  6       1 traits      39213         430     645         1342 &quot;&quot;      
-#&gt;  7       1 traits      39214         430     645         1343 &quot;&quot;      
-#&gt;  8       1 traits      39215         430     645         1344 &quot;&quot;      
-#&gt;  9       1 traits      39216         430     645         1345 &quot;&quot;      
-#&gt; 10       1 traits      39221         430     645         1342 &quot;&quot;      
-#&gt; 11       1 traits      39222         430     645         1343 &quot;&quot;      
-#&gt; 12       1 traits      39223         430     645         1344 &quot;&quot;      
-#&gt; 13       1 traits      39224         430     645         1345 &quot;&quot;      
-#&gt; 14       1 traits      37519         381     602         1220 &lt;NA&gt;    
-#&gt; # … with 29 more variables: city &lt;chr&gt;, lat &lt;dbl&gt;, lon &lt;dbl&gt;,
-#&gt; #   scientificname &lt;chr&gt;, commonname &lt;chr&gt;, genus &lt;chr&gt;, species_id &lt;int&gt;,
-#&gt; #   cultivar_id &lt;int&gt;, author &lt;chr&gt;, citation_year &lt;int&gt;, treatment &lt;chr&gt;,
-#&gt; #   date &lt;chr&gt;, time &lt;chr&gt;, raw_date &lt;chr&gt;, month &lt;int&gt;, year &lt;int&gt;,
-#&gt; #   dateloc &lt;chr&gt;, trait &lt;chr&gt;, trait_description &lt;chr&gt;, mean &lt;dbl&gt;,
-#&gt; #   units &lt;chr&gt;, n &lt;int&gt;, statname &lt;chr&gt;, stat &lt;dbl&gt;, notes &lt;chr&gt;,
-#&gt; #   access_level &lt;int&gt;, cultivar &lt;chr&gt;, entity &lt;lgl&gt;, method_name &lt;lgl&gt;
-# equivalent:
-# (out &lt;- betydb_search(&quot;willow&quot;))
-</code></pre>
-
+<div class="sourceCode" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1"></a>(salix &lt;-<span class="st"> </span><span class="kw">betydb_search</span>(<span class="st">&quot;Salix Vcmax&quot;</span>))</span>
+<span id="cb2-2"><a href="#cb2-2"></a><span class="co">#&gt; # A tibble: 14 x 36</span></span>
+<span id="cb2-3"><a href="#cb2-3"></a><span class="co">#&gt;    checked result_type    id citation_id site_id treatment_id sitename city </span></span>
+<span id="cb2-4"><a href="#cb2-4"></a><span class="co">#&gt;      &lt;int&gt; &lt;chr&gt;       &lt;int&gt;       &lt;int&gt;   &lt;int&gt;        &lt;int&gt; &lt;chr&gt;    &lt;chr&gt;</span></span>
+<span id="cb2-5"><a href="#cb2-5"></a><span class="co">#&gt;  1       1 traits      39217         430     645         1342 &quot;&quot;       Saare</span></span>
+<span id="cb2-6"><a href="#cb2-6"></a><span class="co">#&gt;  2       1 traits      39218         430     645         1343 &quot;&quot;       Saare</span></span>
+<span id="cb2-7"><a href="#cb2-7"></a><span class="co">#&gt;  3       1 traits      39219         430     645         1344 &quot;&quot;       Saare</span></span>
+<span id="cb2-8"><a href="#cb2-8"></a><span class="co">#&gt;  4       1 traits      39220         430     645         1345 &quot;&quot;       Saare</span></span>
+<span id="cb2-9"><a href="#cb2-9"></a><span class="co">#&gt;  5       1 traits      25405          51      NA            1  &lt;NA&gt;    &lt;NA&gt; </span></span>
+<span id="cb2-10"><a href="#cb2-10"></a><span class="co">#&gt;  6       1 traits      39213         430     645         1342 &quot;&quot;       Saare</span></span>
+<span id="cb2-11"><a href="#cb2-11"></a><span class="co">#&gt;  7       1 traits      39214         430     645         1343 &quot;&quot;       Saare</span></span>
+<span id="cb2-12"><a href="#cb2-12"></a><span class="co">#&gt;  8       1 traits      39215         430     645         1344 &quot;&quot;       Saare</span></span>
+<span id="cb2-13"><a href="#cb2-13"></a><span class="co">#&gt;  9       1 traits      39216         430     645         1345 &quot;&quot;       Saare</span></span>
+<span id="cb2-14"><a href="#cb2-14"></a><span class="co">#&gt; 10       1 traits      39221         430     645         1342 &quot;&quot;       Saare</span></span>
+<span id="cb2-15"><a href="#cb2-15"></a><span class="co">#&gt; 11       1 traits      39222         430     645         1343 &quot;&quot;       Saare</span></span>
+<span id="cb2-16"><a href="#cb2-16"></a><span class="co">#&gt; 12       1 traits      39223         430     645         1344 &quot;&quot;       Saare</span></span>
+<span id="cb2-17"><a href="#cb2-17"></a><span class="co">#&gt; 13       1 traits      39224         430     645         1345 &quot;&quot;       Saare</span></span>
+<span id="cb2-18"><a href="#cb2-18"></a><span class="co">#&gt; 14       1 traits      37519         381     602         1220  &lt;NA&gt;    &lt;NA&gt; </span></span>
+<span id="cb2-19"><a href="#cb2-19"></a><span class="co">#&gt; # … with 28 more variables: lat &lt;dbl&gt;, lon &lt;dbl&gt;, scientificname &lt;chr&gt;,</span></span>
+<span id="cb2-20"><a href="#cb2-20"></a><span class="co">#&gt; #   commonname &lt;chr&gt;, genus &lt;chr&gt;, species_id &lt;int&gt;, cultivar_id &lt;int&gt;,</span></span>
+<span id="cb2-21"><a href="#cb2-21"></a><span class="co">#&gt; #   author &lt;chr&gt;, citation_year &lt;int&gt;, treatment &lt;chr&gt;, date &lt;chr&gt;, time &lt;chr&gt;,</span></span>
+<span id="cb2-22"><a href="#cb2-22"></a><span class="co">#&gt; #   raw_date &lt;chr&gt;, month &lt;int&gt;, year &lt;int&gt;, dateloc &lt;chr&gt;, trait &lt;chr&gt;,</span></span>
+<span id="cb2-23"><a href="#cb2-23"></a><span class="co">#&gt; #   trait_description &lt;chr&gt;, mean &lt;dbl&gt;, units &lt;chr&gt;, n &lt;int&gt;, statname &lt;chr&gt;,</span></span>
+<span id="cb2-24"><a href="#cb2-24"></a><span class="co">#&gt; #   stat &lt;dbl&gt;, notes &lt;chr&gt;, access_level &lt;int&gt;, cultivar &lt;chr&gt;, entity &lt;lgl&gt;,</span></span>
+<span id="cb2-25"><a href="#cb2-25"></a><span class="co">#&gt; #   method_name &lt;lgl&gt;</span></span>
+<span id="cb2-26"><a href="#cb2-26"></a><span class="co"># equivalent:</span></span>
+<span id="cb2-27"><a href="#cb2-27"></a><span class="co"># (out &lt;- betydb_search(&quot;willow&quot;))</span></span></code></pre></div>
 <p>Summarise data from the output <code>data.frame</code></p>
-
-<pre><code class="r">library(&quot;dplyr&quot;)
-salix %&gt;%
-  group_by(scientificname, trait) %&gt;%
-  mutate(.mean = as.numeric(mean)) %&gt;%
-  summarise(mean = round(mean(.mean, na.rm = TRUE), 2),
-            min = round(min(.mean, na.rm = TRUE), 2),
-            max = round(max(.mean, na.rm = TRUE), 2),
-            n = length(n))
-#&gt; # A tibble: 4 x 6
-#&gt; # Groups:   scientificname [4]
-#&gt;   scientificname                  trait  mean   min   max     n
-#&gt;   &lt;chr&gt;                           &lt;chr&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;int&gt;
-#&gt; 1 Salix                           Vcmax  65    65    65       1
-#&gt; 2 Salix dasyclados                Vcmax  46.1  34.3  56.7     4
-#&gt; 3 Salix sachalinensis × miyabeana Vcmax  79.3  79.3  79.3     1
-#&gt; 4 Salix viminalis                 Vcmax  43.0  20.0  61.3     8
-</code></pre>
-
+<div class="sourceCode" id="cb3"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1"></a><span class="kw">library</span>(<span class="st">&quot;dplyr&quot;</span>)</span>
+<span id="cb3-2"><a href="#cb3-2"></a>salix <span class="op">%&gt;%</span></span>
+<span id="cb3-3"><a href="#cb3-3"></a><span class="st">  </span><span class="kw">group_by</span>(scientificname, trait) <span class="op">%&gt;%</span></span>
+<span id="cb3-4"><a href="#cb3-4"></a><span class="st">  </span><span class="kw">mutate</span>(<span class="dt">.mean =</span> <span class="kw">as.numeric</span>(mean)) <span class="op">%&gt;%</span></span>
+<span id="cb3-5"><a href="#cb3-5"></a><span class="st">  </span><span class="kw">summarise</span>(<span class="dt">mean =</span> <span class="kw">round</span>(<span class="kw">mean</span>(.mean, <span class="dt">na.rm =</span> <span class="ot">TRUE</span>), <span class="dv">2</span>),</span>
+<span id="cb3-6"><a href="#cb3-6"></a>            <span class="dt">min =</span> <span class="kw">round</span>(<span class="kw">min</span>(.mean, <span class="dt">na.rm =</span> <span class="ot">TRUE</span>), <span class="dv">2</span>),</span>
+<span id="cb3-7"><a href="#cb3-7"></a>            <span class="dt">max =</span> <span class="kw">round</span>(<span class="kw">max</span>(.mean, <span class="dt">na.rm =</span> <span class="ot">TRUE</span>), <span class="dv">2</span>),</span>
+<span id="cb3-8"><a href="#cb3-8"></a>            <span class="dt">n =</span> <span class="kw">length</span>(n))</span>
+<span id="cb3-9"><a href="#cb3-9"></a><span class="co">#&gt; # A tibble: 4 x 6</span></span>
+<span id="cb3-10"><a href="#cb3-10"></a><span class="co">#&gt; # Groups:   scientificname [4]</span></span>
+<span id="cb3-11"><a href="#cb3-11"></a><span class="co">#&gt;   scientificname                  trait  mean   min   max     n</span></span>
+<span id="cb3-12"><a href="#cb3-12"></a><span class="co">#&gt;   &lt;chr&gt;                           &lt;chr&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;int&gt;</span></span>
+<span id="cb3-13"><a href="#cb3-13"></a><span class="co">#&gt; 1 Salix                           Vcmax  65    65    65       1</span></span>
+<span id="cb3-14"><a href="#cb3-14"></a><span class="co">#&gt; 2 Salix dasyclados                Vcmax  46.1  34.3  56.7     4</span></span>
+<span id="cb3-15"><a href="#cb3-15"></a><span class="co">#&gt; 3 Salix sachalinensis × miyabeana Vcmax  79.3  79.3  79.3     1</span></span>
+<span id="cb3-16"><a href="#cb3-16"></a><span class="co">#&gt; 4 Salix viminalis                 Vcmax  43.0  20.0  61.3     8</span></span></code></pre></div>
+</div>
+<div id="ncbi-sequence-data" class="section level2">
 <h2>NCBI sequence data</h2>
-
 <p>Get sequences by id</p>
-
-<pre><code class="r">ncbi_byid(ids = &quot;360040093&quot;)
-#&gt;                  taxon
-#&gt; 1 Eristalis transversa
-#&gt;                                                                                                                                                                                       taxonomy
-#&gt; 1 Eukaryota; Metazoa; Ecdysozoa; Arthropoda; Hexapoda; Insecta; Pterygota; Neoptera; Holometabola; Diptera; Brachycera; Muscomorpha; Syrphoidea; Syrphidae; Eristalinae; Eristalini; Eristalis
-#&gt;                                                                                                             gene_desc
-#&gt; 1 Eristalis transversa voucher CNC:Diptera:102013 cytochrome oxidase subunit 1 (COI) gene, partial cds; mitochondrial
-#&gt;       organelle     gi_no     acc_no keyword   specimen_voucher
-#&gt; 1 mitochondrion 360040093 JN991986.1 BARCODE CNC:Diptera:102013
-#&gt;               lat_lon
-#&gt; 1 38.4623 N 79.2417 W
-#&gt;                                                       country
-#&gt; 1 USA: Virginia, Reddish Knob Lookout, 14.5km W Briery Branch
-#&gt;                                                              paper_title
-#&gt; 1 The evolution of imperfect mimicry in hover flies (Diptera: Syrphidae)
-#&gt;       journal first_author uploaded_date length
-#&gt; 1 Unpublished   Penny,H.D.   03-NOV-2012    658
-#&gt;                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                             sequence
-#&gt; 1 tactttatattttgtatttggaacatgagcgggtatagtaggaacttcattaagaattttaattcgagctgaattaggtcatccaggtgcattaattggtgatgatcaaatttataatgttattgtaacagctcatgcttttgttataattttttttatagtaatacctattataattggaggatttggaaattgattagtaccacttatattaggagctccagatatagcattccctcgaataaataatataagtttctgattattacctccttctttaactctattattagtaagaagtatagtagaaaatggggctggaacaggatgaacagtttatcctccattatcaagtaatattgcacatggaggagcctcagttgatttagcaattttttcacttcacttatcaggaatatcatctattttaggtgcagtaaattttattacaacagttattaatatacgatcaacaggaattacttatgatcgtatacctttatttgtttgatctgttgctattacagctttattattattattatcattaccagtactagcaggagctattacaatattattaactgatcgaaatttaaatacatcattctttgatccagcaggaggaggagaccctatcctgtaccaacacttattc
-</code></pre>
-
+<div class="sourceCode" id="cb4"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1"></a><span class="kw">ncbi_byid</span>(<span class="dt">ids =</span> <span class="st">&quot;360040093&quot;</span>)</span>
+<span id="cb4-2"><a href="#cb4-2"></a><span class="co">#&gt;                  taxon</span></span>
+<span id="cb4-3"><a href="#cb4-3"></a><span class="co">#&gt; 1 Eristalis transversa</span></span>
+<span id="cb4-4"><a href="#cb4-4"></a><span class="co">#&gt;                                                                                                                                                                                       taxonomy</span></span>
+<span id="cb4-5"><a href="#cb4-5"></a><span class="co">#&gt; 1 Eukaryota; Metazoa; Ecdysozoa; Arthropoda; Hexapoda; Insecta; Pterygota; Neoptera; Holometabola; Diptera; Brachycera; Muscomorpha; Syrphoidea; Syrphidae; Eristalinae; Eristalini; Eristalis</span></span>
+<span id="cb4-6"><a href="#cb4-6"></a><span class="co">#&gt;                                                                                                             gene_desc</span></span>
+<span id="cb4-7"><a href="#cb4-7"></a><span class="co">#&gt; 1 Eristalis transversa voucher CNC:Diptera:102013 cytochrome oxidase subunit 1 (COI) gene, partial cds; mitochondrial</span></span>
+<span id="cb4-8"><a href="#cb4-8"></a><span class="co">#&gt;       organelle     gi_no     acc_no keyword   specimen_voucher</span></span>
+<span id="cb4-9"><a href="#cb4-9"></a><span class="co">#&gt; 1 mitochondrion 360040093 JN991986.1 BARCODE CNC:Diptera:102013</span></span>
+<span id="cb4-10"><a href="#cb4-10"></a><span class="co">#&gt;               lat_lon</span></span>
+<span id="cb4-11"><a href="#cb4-11"></a><span class="co">#&gt; 1 38.4623 N 79.2417 W</span></span>
+<span id="cb4-12"><a href="#cb4-12"></a><span class="co">#&gt;                                                       country</span></span>
+<span id="cb4-13"><a href="#cb4-13"></a><span class="co">#&gt; 1 USA: Virginia, Reddish Knob Lookout, 14.5km W Briery Branch</span></span>
+<span id="cb4-14"><a href="#cb4-14"></a><span class="co">#&gt;                                                              paper_title</span></span>
+<span id="cb4-15"><a href="#cb4-15"></a><span class="co">#&gt; 1 The evolution of imperfect mimicry in hover flies (Diptera: Syrphidae)</span></span>
+<span id="cb4-16"><a href="#cb4-16"></a><span class="co">#&gt;       journal first_author uploaded_date length</span></span>
+<span id="cb4-17"><a href="#cb4-17"></a><span class="co">#&gt; 1 Unpublished   Penny,H.D.   03-NOV-2012    658</span></span>
+<span id="cb4-18"><a href="#cb4-18"></a><span class="co">#&gt;                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                             sequence</span></span>
+<span id="cb4-19"><a href="#cb4-19"></a><span class="co">#&gt; 1 tactttatattttgtatttggaacatgagcgggtatagtaggaacttcattaagaattttaattcgagctgaattaggtcatccaggtgcattaattggtgatgatcaaatttataatgttattgtaacagctcatgcttttgttataattttttttatagtaatacctattataattggaggatttggaaattgattagtaccacttatattaggagctccagatatagcattccctcgaataaataatataagtttctgattattacctccttctttaactctattattagtaagaagtatagtagaaaatggggctggaacaggatgaacagtttatcctccattatcaagtaatattgcacatggaggagcctcagttgatttagcaattttttcacttcacttatcaggaatatcatctattttaggtgcagtaaattttattacaacagttattaatatacgatcaacaggaattacttatgatcgtatacctttatttgtttgatctgttgctattacagctttattattattattatcattaccagtactagcaggagctattacaatattattaactgatcgaaatttaaatacatcattctttgatccagcaggaggaggagaccctatcctgtaccaacacttattc</span></span></code></pre></div>
 <p>Get sequences searching by taxonomic name</p>
-
-<pre><code class="r">out &lt;- ncbi_searcher(taxa = &quot;Umbra limi&quot;, seqrange = &quot;1:2000&quot;)
-#&gt; ══  1 queries  ═══════════════
-#&gt; ✔  Found:  Umbra+limi
-#&gt; ══  Results  ═════════════════
-#&gt; 
-#&gt; ● Total: 1 
-#&gt; ● Found: 1 
-#&gt; ● Not Found: 0
-head(out)
-#&gt;        taxon length
-#&gt; 1 Umbra limi    761
-#&gt; 2 Umbra limi    765
-#&gt; 3 Umbra limi    764
-#&gt; 4 Umbra limi    743
-#&gt; 5 Umbra limi    758
-#&gt; 6 Umbra limi    653
-#&gt;                                                                                          gene_desc
-#&gt; 1                                  Umbra limi voucher NXG2012264 rhodopsin (Rho) gene, partial cds
-#&gt; 2                                   Umbra limi voucher NXG201250 rhodopsin (Rho) gene, partial cds
-#&gt; 3                                  Umbra limi voucher NXG2012183 rhodopsin (Rho) gene, partial cds
-#&gt; 4                                   Umbra limi voucher NXG201252 rhodopsin (Rho) gene, partial cds
-#&gt; 5                                  Umbra limi voucher NXG2012231 rhodopsin (Rho) gene, partial cds
-#&gt; 6 Umbra limi voucher NXG201250 cytochrome oxidase subunit 1 (COI) gene, partial cds; mitochondrial
-#&gt;     acc_no      gi_no
-#&gt; 1 KX146134 1049488959
-#&gt; 2 KX146015 1049488721
-#&gt; 3 KX145969 1049488629
-#&gt; 4 KX145777 1049488245
-#&gt; 5 KX145759 1049488209
-#&gt; 6 KX145415 1049487591
-</code></pre>
-
-<h2>EOL&#39;s traitbank trait data</h2>
-
-<pre><code class="r">traitbank(query = &quot;MATCH (n:Trait) RETURN n LIMIT 1;&quot;)
-#&gt; $columns
-#&gt; [1] &quot;n&quot;
-#&gt; 
-#&gt; $data
-#&gt; $data[[1]]
-#&gt;   metadata.id metadata.labels
-#&gt; 1    20280619           Trait
-#&gt;                                                                                     paged_traverse
-#&gt; 1 http://10.252.248.44:7474/db/data/node/20280619/paged/traverse/{returnType}{?pageSize,leaseTime}
-#&gt;                                              outgoing_relationships
-#&gt; 1 http://10.252.248.44:7474/db/data/node/20280619/relationships/out
-#&gt;                                                        outgoing_typed_relationships
-#&gt; 1 http://10.252.248.44:7474/db/data/node/20280619/relationships/out/{-list|&amp;|types}
-#&gt;                                                   labels
-#&gt; 1 http://10.252.248.44:7474/db/data/node/20280619/labels
-#&gt;                                             create_relationship
-#&gt; 1 http://10.252.248.44:7474/db/data/node/20280619/relationships
-#&gt;                                                                traverse
-#&gt; 1 http://10.252.248.44:7474/db/data/node/20280619/traverse/{returnType}
-#&gt;                                                   all_relationships
-#&gt; 1 http://10.252.248.44:7474/db/data/node/20280619/relationships/all
-#&gt;                                                             all_typed_relationships
-#&gt; 1 http://10.252.248.44:7474/db/data/node/20280619/relationships/all/{-list|&amp;|types}
-#&gt;                                                           property
-#&gt; 1 http://10.252.248.44:7474/db/data/node/20280619/properties/{key}
-#&gt;                                              self
-#&gt; 1 http://10.252.248.44:7474/db/data/node/20280619
-#&gt;                                             incoming_relationships
-#&gt; 1 http://10.252.248.44:7474/db/data/node/20280619/relationships/in
-#&gt;                                                   properties
-#&gt; 1 http://10.252.248.44:7474/db/data/node/20280619/properties
-#&gt;                                                       incoming_typed_relationships
-#&gt; 1 http://10.252.248.44:7474/db/data/node/20280619/relationships/in/{-list|&amp;|types}
-#&gt;     data.eol_pk data.resource_pk
-#&gt; 1 R74-PK5014587           110690
-#&gt;                                data.scientific_name
-#&gt; 1 &lt;i&gt;Adenopodia floribunda&lt;/i&gt; (Kleinhoonte) Brenan
-#&gt;                                data.source
-#&gt; 1 http://www.pnas.org/content/114/40/10695
-#&gt;                                                                   data.literal
-#&gt; 1 http://eol.org/schema/terms/Tropical_and_subtropical_moist_broadleaf_forests
-</code></pre>
-
-<h2>Coral</h2>
-
-<p>Get the species list and their ids</p>
-
-<pre><code class="r">coral_species()
-#&gt; # A tibble: 1,548 x 2
-#&gt;    name                       id   
-#&gt;    &lt;chr&gt;                      &lt;chr&gt;
-#&gt;  1 Acanthastrea brevis        3    
-#&gt;  2 Acanthastrea echinata      4    
-#&gt;  3 Acanthastrea hemprichi     6    
-#&gt;  4 Acanthastrea ishigakiensis 8    
-#&gt;  5 Acanthastrea regularis     12   
-#&gt;  6 Acanthastrea rotundoflora  13   
-#&gt;  7 Acanthastrea subechinata   14   
-#&gt;  8 Acropora abrolhosensis     16   
-#&gt;  9 Acropora abrotanoides      17   
-#&gt; 10 Acropora aculeus           18   
-#&gt; # … with 1,538 more rows
-</code></pre>
-
-<p>Get data by taxon</p>
-
-<pre><code class="r">coral_taxa(80)
-#&gt; # A tibble: 3,540 x 25
-#&gt;    observation_id access user_id specie_id specie_name location_id
-#&gt;             &lt;int&gt;  &lt;int&gt;   &lt;int&gt;     &lt;int&gt; &lt;chr&gt;             &lt;int&gt;
-#&gt;  1         157133      1      10        80 Acropora h…           1
-#&gt;  2         156961      1      14        80 Acropora h…         409
-#&gt;  3           5781      1       1        80 Acropora h…           1
-#&gt;  4         156610      1       2        80 Acropora h…         500
-#&gt;  5         158118      1      10        80 Acropora h…         409
-#&gt;  6         119211      1      49        80 Acropora h…           1
-#&gt;  7         158211      1      10        80 Acropora h…         413
-#&gt;  8          90294      1      15        80 Acropora h…         341
-#&gt;  9          90294      1      15        80 Acropora h…         341
-#&gt; 10          90294      1      15        80 Acropora h…         341
-#&gt; # … with 3,530 more rows, and 19 more variables: location_name &lt;chr&gt;,
-#&gt; #   latitude &lt;dbl&gt;, longitude &lt;dbl&gt;, resource_id &lt;int&gt;,
-#&gt; #   resource_secondary_id &lt;int&gt;, measurement_id &lt;int&gt;, trait_id &lt;int&gt;,
-#&gt; #   trait_name &lt;chr&gt;, standard_id &lt;int&gt;, standard_unit &lt;chr&gt;,
-#&gt; #   methodology_id &lt;int&gt;, methodology_name &lt;chr&gt;, value &lt;chr&gt;,
-#&gt; #   value_type &lt;chr&gt;, precision &lt;dbl&gt;, precision_type &lt;chr&gt;,
-#&gt; #   precision_upper &lt;dbl&gt;, replicates &lt;int&gt;, notes &lt;chr&gt;
-</code></pre>
-
-<p>Get data by trait</p>
-
-<pre><code class="r">coral_traits(105)
-#&gt; # A tibble: 0 x 25
-#&gt; # … with 25 variables: observation_id &lt;lgl&gt;, access &lt;lgl&gt;, user_id &lt;lgl&gt;,
-#&gt; #   specie_id &lt;lgl&gt;, specie_name &lt;lgl&gt;, location_id &lt;lgl&gt;,
-#&gt; #   location_name &lt;lgl&gt;, latitude &lt;lgl&gt;, longitude &lt;lgl&gt;,
-#&gt; #   resource_id &lt;lgl&gt;, resource_secondary_id &lt;lgl&gt;, measurement_id &lt;lgl&gt;,
-#&gt; #   trait_id &lt;lgl&gt;, trait_name &lt;lgl&gt;, standard_id &lt;lgl&gt;,
-#&gt; #   standard_unit &lt;lgl&gt;, methodology_id &lt;lgl&gt;, methodology_name &lt;lgl&gt;,
-#&gt; #   value &lt;lgl&gt;, value_type &lt;lgl&gt;, precision &lt;lgl&gt;, precision_type &lt;lgl&gt;,
-#&gt; #   precision_upper &lt;lgl&gt;, replicates &lt;lgl&gt;, notes &lt;lgl&gt;
-</code></pre>
-
+<div class="sourceCode" id="cb5"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1"></a>out &lt;-<span class="st"> </span><span class="kw">ncbi_searcher</span>(<span class="dt">taxa =</span> <span class="st">&quot;Umbra limi&quot;</span>, <span class="dt">seqrange =</span> <span class="st">&quot;1:2000&quot;</span>)</span>
+<span id="cb5-2"><a href="#cb5-2"></a><span class="co">#&gt; using sleep: 0</span></span>
+<span id="cb5-3"><a href="#cb5-3"></a><span class="co">#&gt; ══  1 queries  ═══════════════</span></span>
+<span id="cb5-4"><a href="#cb5-4"></a><span class="co">#&gt; ✔  Found:  Umbra+limi</span></span>
+<span id="cb5-5"><a href="#cb5-5"></a><span class="co">#&gt; ══  Results  ═════════════════</span></span>
+<span id="cb5-6"><a href="#cb5-6"></a><span class="co">#&gt; </span></span>
+<span id="cb5-7"><a href="#cb5-7"></a><span class="co">#&gt; ● Total: 1 </span></span>
+<span id="cb5-8"><a href="#cb5-8"></a><span class="co">#&gt; ● Found: 1 </span></span>
+<span id="cb5-9"><a href="#cb5-9"></a><span class="co">#&gt; ● Not Found: 0</span></span>
+<span id="cb5-10"><a href="#cb5-10"></a><span class="kw">head</span>(out)</span>
+<span id="cb5-11"><a href="#cb5-11"></a><span class="co">#&gt;        taxon length</span></span>
+<span id="cb5-12"><a href="#cb5-12"></a><span class="co">#&gt; 1 Umbra limi    298</span></span>
+<span id="cb5-13"><a href="#cb5-13"></a><span class="co">#&gt; 2 Umbra limi    761</span></span>
+<span id="cb5-14"><a href="#cb5-14"></a><span class="co">#&gt; 3 Umbra limi    765</span></span>
+<span id="cb5-15"><a href="#cb5-15"></a><span class="co">#&gt; 4 Umbra limi    764</span></span>
+<span id="cb5-16"><a href="#cb5-16"></a><span class="co">#&gt; 5 Umbra limi    743</span></span>
+<span id="cb5-17"><a href="#cb5-17"></a><span class="co">#&gt; 6 Umbra limi    758</span></span>
+<span id="cb5-18"><a href="#cb5-18"></a><span class="co">#&gt;                                                                                                gene_desc</span></span>
+<span id="cb5-19"><a href="#cb5-19"></a><span class="co">#&gt; 1 Umbra limi voucher Umbra_limi_GLF16S large subunit ribosomal RNA gene, partial sequence; mitochondrial</span></span>
+<span id="cb5-20"><a href="#cb5-20"></a><span class="co">#&gt; 2                                        Umbra limi voucher NXG2012264 rhodopsin (Rho) gene, partial cds</span></span>
+<span id="cb5-21"><a href="#cb5-21"></a><span class="co">#&gt; 3                                         Umbra limi voucher NXG201250 rhodopsin (Rho) gene, partial cds</span></span>
+<span id="cb5-22"><a href="#cb5-22"></a><span class="co">#&gt; 4                                        Umbra limi voucher NXG2012183 rhodopsin (Rho) gene, partial cds</span></span>
+<span id="cb5-23"><a href="#cb5-23"></a><span class="co">#&gt; 5                                         Umbra limi voucher NXG201252 rhodopsin (Rho) gene, partial cds</span></span>
+<span id="cb5-24"><a href="#cb5-24"></a><span class="co">#&gt; 6                                        Umbra limi voucher NXG2012231 rhodopsin (Rho) gene, partial cds</span></span>
+<span id="cb5-25"><a href="#cb5-25"></a><span class="co">#&gt;     acc_no      gi_no</span></span>
+<span id="cb5-26"><a href="#cb5-26"></a><span class="co">#&gt; 1 MT549086 1847697133</span></span>
+<span id="cb5-27"><a href="#cb5-27"></a><span class="co">#&gt; 2 KX146134 1049488959</span></span>
+<span id="cb5-28"><a href="#cb5-28"></a><span class="co">#&gt; 3 KX146015 1049488721</span></span>
+<span id="cb5-29"><a href="#cb5-29"></a><span class="co">#&gt; 4 KX145969 1049488629</span></span>
+<span id="cb5-30"><a href="#cb5-30"></a><span class="co">#&gt; 5 KX145777 1049488245</span></span>
+<span id="cb5-31"><a href="#cb5-31"></a><span class="co">#&gt; 6 KX145759 1049488209</span></span></code></pre></div>
+</div>
+<div id="eols-traitbank-trait-data" class="section level2">
+<h2>EOL’s traitbank trait data</h2>
+<div class="sourceCode" id="cb6"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1"></a><span class="kw">traitbank</span>(<span class="dt">query =</span> <span class="st">&quot;MATCH (n:Trait) RETURN n LIMIT 1;&quot;</span>)</span>
+<span id="cb6-2"><a href="#cb6-2"></a><span class="co">#&gt; $columns</span></span>
+<span id="cb6-3"><a href="#cb6-3"></a><span class="co">#&gt; [1] &quot;n&quot;</span></span>
+<span id="cb6-4"><a href="#cb6-4"></a><span class="co">#&gt; </span></span>
+<span id="cb6-5"><a href="#cb6-5"></a><span class="co">#&gt; $data</span></span>
+<span id="cb6-6"><a href="#cb6-6"></a><span class="co">#&gt; $data[[1]]</span></span>
+<span id="cb6-7"><a href="#cb6-7"></a><span class="co">#&gt;   metadata.id metadata.labels    data.eol_pk data.object_page_id</span></span>
+<span id="cb6-8"><a href="#cb6-8"></a><span class="co">#&gt; 1    22529388           Trait R20-PK20910350            46581789</span></span>
+<span id="cb6-9"><a href="#cb6-9"></a><span class="co">#&gt;                                                    data.resource_pk</span></span>
+<span id="cb6-10"><a href="#cb6-10"></a><span class="co">#&gt; 1 ReverseOf_globi:assoc:7296029-FBC:FB:SpecCode:4755-ATE-EOL_V2:281</span></span>
+<span id="cb6-11"><a href="#cb6-11"></a><span class="co">#&gt;   data.scientific_name</span></span>
+<span id="cb6-12"><a href="#cb6-12"></a><span class="co">#&gt; 1              Plantae</span></span>
+<span id="cb6-13"><a href="#cb6-13"></a><span class="co">#&gt;                                                                                                                                                                                                                                                             data.source</span></span>
+<span id="cb6-14"><a href="#cb6-14"></a><span class="co">#&gt; 1 Froese, R. and D. Pauly. Editors. 2019. FishBase. World Wide Web electronic publication. www.fishbase.org, version (08/2019). Accessed at &lt;https://github.com/globalbioticinteractions/fishbase/archive/6ebceaacea18c6ff6c247182f9af8ad6fc05cc82.zip&gt; on 25 May 2020.</span></span></code></pre></div>
+</div>
+<div id="birdlife-international" class="section level2">
 <h2>Birdlife International</h2>
-
 <p>Habitat data</p>
-
-<pre><code class="r">birdlife_habitat(22721692)
-#&gt;         id Habitat (level 1)                  Habitat (level 2) Importance
-#&gt; 1 22721692            Forest           Subtropical/Tropical Dry      major
-#&gt; 2 22721692            Forest Subtropical/Tropical Moist Montane      major
-#&gt; 3 22721692            Forest                          Temperate   suitable
-#&gt; 4 22721692         Shrubland Subtropical/Tropical High Altitude   suitable
-#&gt;     Occurrence
-#&gt; 1     breeding
-#&gt; 2 non-breeding
-#&gt; 3     breeding
-#&gt; 4     breeding
-</code></pre>
-
+<div class="sourceCode" id="cb7"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1"></a><span class="kw">birdlife_habitat</span>(<span class="dv">22721692</span>)</span>
+<span id="cb7-2"><a href="#cb7-2"></a><span class="co">#&gt;         id Habitat (level 1)                  Habitat (level 2) Importance</span></span>
+<span id="cb7-3"><a href="#cb7-3"></a><span class="co">#&gt; 1 22721692            Forest           Subtropical/Tropical Dry      major</span></span>
+<span id="cb7-4"><a href="#cb7-4"></a><span class="co">#&gt; 2 22721692            Forest Subtropical/Tropical Moist Montane      major</span></span>
+<span id="cb7-5"><a href="#cb7-5"></a><span class="co">#&gt; 3 22721692            Forest                          Temperate   suitable</span></span>
+<span id="cb7-6"><a href="#cb7-6"></a><span class="co">#&gt; 4 22721692         Shrubland Subtropical/Tropical High Altitude   suitable</span></span>
+<span id="cb7-7"><a href="#cb7-7"></a><span class="co">#&gt;     Occurrence</span></span>
+<span id="cb7-8"><a href="#cb7-8"></a><span class="co">#&gt; 1     breeding</span></span>
+<span id="cb7-9"><a href="#cb7-9"></a><span class="co">#&gt; 2 non-breeding</span></span>
+<span id="cb7-10"><a href="#cb7-10"></a><span class="co">#&gt; 3     breeding</span></span>
+<span id="cb7-11"><a href="#cb7-11"></a><span class="co">#&gt; 4     breeding</span></span></code></pre></div>
 <p>Threats data</p>
+<div class="sourceCode" id="cb8"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1"></a><span class="kw">birdlife_threats</span>(<span class="dv">22721692</span>)</span>
+<span id="cb8-2"><a href="#cb8-2"></a><span class="co">#&gt;          id                                                  threat1</span></span>
+<span id="cb8-3"><a href="#cb8-3"></a><span class="co">#&gt; 1  22721692                                Agriculture &amp; aquaculture</span></span>
+<span id="cb8-4"><a href="#cb8-4"></a><span class="co">#&gt; 2  22721692                                Agriculture &amp; aquaculture</span></span>
+<span id="cb8-5"><a href="#cb8-5"></a><span class="co">#&gt; 3  22721692                                  Biological resource use</span></span>
+<span id="cb8-6"><a href="#cb8-6"></a><span class="co">#&gt; 4  22721692                          Climate change &amp; severe weather</span></span>
+<span id="cb8-7"><a href="#cb8-7"></a><span class="co">#&gt; 5  22721692                          Climate change &amp; severe weather</span></span>
+<span id="cb8-8"><a href="#cb8-8"></a><span class="co">#&gt; 6  22721692                          Climate change &amp; severe weather</span></span>
+<span id="cb8-9"><a href="#cb8-9"></a><span class="co">#&gt; 7  22721692 Invasive and other problematic species, genes &amp; diseases</span></span>
+<span id="cb8-10"><a href="#cb8-10"></a><span class="co">#&gt; 8  22721692 Invasive and other problematic species, genes &amp; diseases</span></span>
+<span id="cb8-11"><a href="#cb8-11"></a><span class="co">#&gt; 9  22721692 Invasive and other problematic species, genes &amp; diseases</span></span>
+<span id="cb8-12"><a href="#cb8-12"></a><span class="co">#&gt; 10 22721692 Invasive and other problematic species, genes &amp; diseases</span></span>
+<span id="cb8-13"><a href="#cb8-13"></a><span class="co">#&gt; 11 22721692 Invasive and other problematic species, genes &amp; diseases</span></span>
+<span id="cb8-14"><a href="#cb8-14"></a><span class="co">#&gt; 12 22721692 Invasive and other problematic species, genes &amp; diseases</span></span>
+<span id="cb8-15"><a href="#cb8-15"></a><span class="co">#&gt; 13 22721692                             Natural system modifications</span></span>
+<span id="cb8-16"><a href="#cb8-16"></a><span class="co">#&gt; 14 22721692                             Natural system modifications</span></span>
+<span id="cb8-17"><a href="#cb8-17"></a><span class="co">#&gt; 15 22721692                     Residential &amp; commercial development</span></span>
+<span id="cb8-18"><a href="#cb8-18"></a><span class="co">#&gt; 16 22721692                       Transportation &amp; service corridors</span></span>
+<span id="cb8-19"><a href="#cb8-19"></a><span class="co">#&gt;                                                                                   threat2</span></span>
+<span id="cb8-20"><a href="#cb8-20"></a><span class="co">#&gt; 1                             Annual &amp; perennial non-timber crops - Agro-industry farming</span></span>
+<span id="cb8-21"><a href="#cb8-21"></a><span class="co">#&gt; 2                              Annual &amp; perennial non-timber crops - Small-holder farming</span></span>
+<span id="cb8-22"><a href="#cb8-22"></a><span class="co">#&gt; 3  Logging &amp; wood harvesting - Unintentional effects: (subsistence/small scale) [harvest]</span></span>
+<span id="cb8-23"><a href="#cb8-23"></a><span class="co">#&gt; 4                                                                                Droughts</span></span>
+<span id="cb8-24"><a href="#cb8-24"></a><span class="co">#&gt; 5                                                           Habitat shifting &amp; alteration</span></span>
+<span id="cb8-25"><a href="#cb8-25"></a><span class="co">#&gt; 6                                                                       Storms &amp; flooding</span></span>
+<span id="cb8-26"><a href="#cb8-26"></a><span class="co">#&gt; 7                                 Invasive non-native/alien species/diseases - Sus scrofa</span></span>
+<span id="cb8-27"><a href="#cb8-27"></a><span class="co">#&gt; 8                        Invasive non-native/alien species/diseases - Unspecified species</span></span>
+<span id="cb8-28"><a href="#cb8-28"></a><span class="co">#&gt; 9                            Problematic native species/diseases - Dendroctonus frontalis</span></span>
+<span id="cb8-29"><a href="#cb8-29"></a><span class="co">#&gt; 10                           Problematic native species/diseases - Odocoileus virginianus</span></span>
+<span id="cb8-30"><a href="#cb8-30"></a><span class="co">#&gt; 11                              Problematic native species/diseases - Unspecified species</span></span>
+<span id="cb8-31"><a href="#cb8-31"></a><span class="co">#&gt; 12                    Problematic species/disease of unknown origin - Unspecified species</span></span>
+<span id="cb8-32"><a href="#cb8-32"></a><span class="co">#&gt; 13                                     Fire &amp; fire suppression - Trend Unknown/Unrecorded</span></span>
+<span id="cb8-33"><a href="#cb8-33"></a><span class="co">#&gt; 14                                                          Other ecosystem modifications</span></span>
+<span id="cb8-34"><a href="#cb8-34"></a><span class="co">#&gt; 15                                                                  Housing &amp; urban areas</span></span>
+<span id="cb8-35"><a href="#cb8-35"></a><span class="co">#&gt; 16                                                                      Roads &amp; railroads</span></span>
+<span id="cb8-36"><a href="#cb8-36"></a><span class="co">#&gt;                                                                 stresses</span></span>
+<span id="cb8-37"><a href="#cb8-37"></a><span class="co">#&gt; 1                     Ecosystem degradation, Ecosystem conversion, Other</span></span>
+<span id="cb8-38"><a href="#cb8-38"></a><span class="co">#&gt; 2                     Ecosystem degradation, Ecosystem conversion, Other</span></span>
+<span id="cb8-39"><a href="#cb8-39"></a><span class="co">#&gt; 3                                                  Ecosystem degradation</span></span>
+<span id="cb8-40"><a href="#cb8-40"></a><span class="co">#&gt; 4                                                  Ecosystem degradation</span></span>
+<span id="cb8-41"><a href="#cb8-41"></a><span class="co">#&gt; 5                            Ecosystem degradation, Ecosystem conversion</span></span>
+<span id="cb8-42"><a href="#cb8-42"></a><span class="co">#&gt; 6                                                  Ecosystem degradation</span></span>
+<span id="cb8-43"><a href="#cb8-43"></a><span class="co">#&gt; 7                            Ecosystem degradation, Ecosystem conversion</span></span>
+<span id="cb8-44"><a href="#cb8-44"></a><span class="co">#&gt; 8                                                      Species mortality</span></span>
+<span id="cb8-45"><a href="#cb8-45"></a><span class="co">#&gt; 9                                                  Ecosystem degradation</span></span>
+<span id="cb8-46"><a href="#cb8-46"></a><span class="co">#&gt; 10                                                 Ecosystem degradation</span></span>
+<span id="cb8-47"><a href="#cb8-47"></a><span class="co">#&gt; 11                   Ecosystem degradation, Reduced reproductive success</span></span>
+<span id="cb8-48"><a href="#cb8-48"></a><span class="co">#&gt; 12                                                     Species mortality</span></span>
+<span id="cb8-49"><a href="#cb8-49"></a><span class="co">#&gt; 13                           Ecosystem degradation, Ecosystem conversion</span></span>
+<span id="cb8-50"><a href="#cb8-50"></a><span class="co">#&gt; 14                           Ecosystem degradation, Ecosystem conversion</span></span>
+<span id="cb8-51"><a href="#cb8-51"></a><span class="co">#&gt; 15 Ecosystem degradation, Ecosystem conversion, Species mortality, Other</span></span>
+<span id="cb8-52"><a href="#cb8-52"></a><span class="co">#&gt; 16                                                     Species mortality</span></span>
+<span id="cb8-53"><a href="#cb8-53"></a><span class="co">#&gt;                                                      timing</span></span>
+<span id="cb8-54"><a href="#cb8-54"></a><span class="co">#&gt; 1                                 Agriculture &amp; aquaculture</span></span>
+<span id="cb8-55"><a href="#cb8-55"></a><span class="co">#&gt; 2                                 Agriculture &amp; aquaculture</span></span>
+<span id="cb8-56"><a href="#cb8-56"></a><span class="co">#&gt; 3                                   Biological resource use</span></span>
+<span id="cb8-57"><a href="#cb8-57"></a><span class="co">#&gt; 4                           Climate change &amp; severe weather</span></span>
+<span id="cb8-58"><a href="#cb8-58"></a><span class="co">#&gt; 5                           Climate change &amp; severe weather</span></span>
+<span id="cb8-59"><a href="#cb8-59"></a><span class="co">#&gt; 6                           Climate change &amp; severe weather</span></span>
+<span id="cb8-60"><a href="#cb8-60"></a><span class="co">#&gt; 7  Invasive and other problematic species, genes &amp; diseases</span></span>
+<span id="cb8-61"><a href="#cb8-61"></a><span class="co">#&gt; 8  Invasive and other problematic species, genes &amp; diseases</span></span>
+<span id="cb8-62"><a href="#cb8-62"></a><span class="co">#&gt; 9  Invasive and other problematic species, genes &amp; diseases</span></span>
+<span id="cb8-63"><a href="#cb8-63"></a><span class="co">#&gt; 10 Invasive and other problematic species, genes &amp; diseases</span></span>
+<span id="cb8-64"><a href="#cb8-64"></a><span class="co">#&gt; 11 Invasive and other problematic species, genes &amp; diseases</span></span>
+<span id="cb8-65"><a href="#cb8-65"></a><span class="co">#&gt; 12 Invasive and other problematic species, genes &amp; diseases</span></span>
+<span id="cb8-66"><a href="#cb8-66"></a><span class="co">#&gt; 13                             Natural system modifications</span></span>
+<span id="cb8-67"><a href="#cb8-67"></a><span class="co">#&gt; 14                             Natural system modifications</span></span>
+<span id="cb8-68"><a href="#cb8-68"></a><span class="co">#&gt; 15                     Residential &amp; commercial development</span></span>
+<span id="cb8-69"><a href="#cb8-69"></a><span class="co">#&gt; 16                       Transportation &amp; service corridors</span></span>
+<span id="cb8-70"><a href="#cb8-70"></a><span class="co">#&gt;                                                                                     scope</span></span>
+<span id="cb8-71"><a href="#cb8-71"></a><span class="co">#&gt; 1                             Annual &amp; perennial non-timber crops - Agro-industry farming</span></span>
+<span id="cb8-72"><a href="#cb8-72"></a><span class="co">#&gt; 2                              Annual &amp; perennial non-timber crops - Small-holder farming</span></span>
+<span id="cb8-73"><a href="#cb8-73"></a><span class="co">#&gt; 3  Logging &amp; wood harvesting - Unintentional effects: (subsistence/small scale) [harvest]</span></span>
+<span id="cb8-74"><a href="#cb8-74"></a><span class="co">#&gt; 4                                                                                Droughts</span></span>
+<span id="cb8-75"><a href="#cb8-75"></a><span class="co">#&gt; 5                                                           Habitat shifting &amp; alteration</span></span>
+<span id="cb8-76"><a href="#cb8-76"></a><span class="co">#&gt; 6                                                                       Storms &amp; flooding</span></span>
+<span id="cb8-77"><a href="#cb8-77"></a><span class="co">#&gt; 7                                 Invasive non-native/alien species/diseases - Sus scrofa</span></span>
+<span id="cb8-78"><a href="#cb8-78"></a><span class="co">#&gt; 8                        Invasive non-native/alien species/diseases - Unspecified species</span></span>
+<span id="cb8-79"><a href="#cb8-79"></a><span class="co">#&gt; 9                            Problematic native species/diseases - Dendroctonus frontalis</span></span>
+<span id="cb8-80"><a href="#cb8-80"></a><span class="co">#&gt; 10                           Problematic native species/diseases - Odocoileus virginianus</span></span>
+<span id="cb8-81"><a href="#cb8-81"></a><span class="co">#&gt; 11                              Problematic native species/diseases - Unspecified species</span></span>
+<span id="cb8-82"><a href="#cb8-82"></a><span class="co">#&gt; 12                    Problematic species/disease of unknown origin - Unspecified species</span></span>
+<span id="cb8-83"><a href="#cb8-83"></a><span class="co">#&gt; 13                                     Fire &amp; fire suppression - Trend Unknown/Unrecorded</span></span>
+<span id="cb8-84"><a href="#cb8-84"></a><span class="co">#&gt; 14                                                          Other ecosystem modifications</span></span>
+<span id="cb8-85"><a href="#cb8-85"></a><span class="co">#&gt; 15                                                                  Housing &amp; urban areas</span></span>
+<span id="cb8-86"><a href="#cb8-86"></a><span class="co">#&gt; 16                                                                      Roads &amp; railroads</span></span>
+<span id="cb8-87"><a href="#cb8-87"></a><span class="co">#&gt;    severity  impact</span></span>
+<span id="cb8-88"><a href="#cb8-88"></a><span class="co">#&gt; 1   Ongoing Ongoing</span></span>
+<span id="cb8-89"><a href="#cb8-89"></a><span class="co">#&gt; 2   Ongoing Ongoing</span></span>
+<span id="cb8-90"><a href="#cb8-90"></a><span class="co">#&gt; 3   Ongoing Ongoing</span></span>
+<span id="cb8-91"><a href="#cb8-91"></a><span class="co">#&gt; 4   Ongoing Ongoing</span></span>
+<span id="cb8-92"><a href="#cb8-92"></a><span class="co">#&gt; 5    Future  Future</span></span>
+<span id="cb8-93"><a href="#cb8-93"></a><span class="co">#&gt; 6   Ongoing Ongoing</span></span>
+<span id="cb8-94"><a href="#cb8-94"></a><span class="co">#&gt; 7   Ongoing Ongoing</span></span>
+<span id="cb8-95"><a href="#cb8-95"></a><span class="co">#&gt; 8   Ongoing Ongoing</span></span>
+<span id="cb8-96"><a href="#cb8-96"></a><span class="co">#&gt; 9   Ongoing Ongoing</span></span>
+<span id="cb8-97"><a href="#cb8-97"></a><span class="co">#&gt; 10  Ongoing Ongoing</span></span>
+<span id="cb8-98"><a href="#cb8-98"></a><span class="co">#&gt; 11  Ongoing Ongoing</span></span>
+<span id="cb8-99"><a href="#cb8-99"></a><span class="co">#&gt; 12  Ongoing Ongoing</span></span>
+<span id="cb8-100"><a href="#cb8-100"></a><span class="co">#&gt; 13  Ongoing Ongoing</span></span>
+<span id="cb8-101"><a href="#cb8-101"></a><span class="co">#&gt; 14   Future  Future</span></span>
+<span id="cb8-102"><a href="#cb8-102"></a><span class="co">#&gt; 15  Ongoing Ongoing</span></span>
+<span id="cb8-103"><a href="#cb8-103"></a><span class="co">#&gt; 16  Ongoing Ongoing</span></span></code></pre></div>
+</div>
 
-<pre><code class="r">birdlife_threats(22721692)
-#&gt;          id                                                  threat1
-#&gt; 1  22721692                                Agriculture &amp; aquaculture
-#&gt; 2  22721692                                Agriculture &amp; aquaculture
-#&gt; 3  22721692                                  Biological resource use
-#&gt; 4  22721692                          Climate change &amp; severe weather
-#&gt; 5  22721692                          Climate change &amp; severe weather
-#&gt; 6  22721692                          Climate change &amp; severe weather
-#&gt; 7  22721692 Invasive and other problematic species, genes &amp; diseases
-#&gt; 8  22721692 Invasive and other problematic species, genes &amp; diseases
-#&gt; 9  22721692 Invasive and other problematic species, genes &amp; diseases
-#&gt; 10 22721692 Invasive and other problematic species, genes &amp; diseases
-#&gt; 11 22721692 Invasive and other problematic species, genes &amp; diseases
-#&gt; 12 22721692 Invasive and other problematic species, genes &amp; diseases
-#&gt; 13 22721692                             Natural system modifications
-#&gt; 14 22721692                             Natural system modifications
-#&gt; 15 22721692                     Residential &amp; commercial development
-#&gt; 16 22721692                       Transportation &amp; service corridors
-#&gt;                                                                                   threat2
-#&gt; 1                             Annual &amp; perennial non-timber crops - Agro-industry farming
-#&gt; 2                              Annual &amp; perennial non-timber crops - Small-holder farming
-#&gt; 3  Logging &amp; wood harvesting - Unintentional effects: (subsistence/small scale) [harvest]
-#&gt; 4                                                                                Droughts
-#&gt; 5                                                           Habitat shifting &amp; alteration
-#&gt; 6                                                                       Storms &amp; flooding
-#&gt; 7                                 Invasive non-native/alien species/diseases - Sus scrofa
-#&gt; 8                        Invasive non-native/alien species/diseases - Unspecified species
-#&gt; 9                            Problematic native species/diseases - Dendroctonus frontalis
-#&gt; 10                           Problematic native species/diseases - Odocoileus virginianus
-#&gt; 11                              Problematic native species/diseases - Unspecified species
-#&gt; 12                    Problematic species/disease of unknown origin - Unspecified species
-#&gt; 13                                     Fire &amp; fire suppression - Trend Unknown/Unrecorded
-#&gt; 14                                                          Other ecosystem modifications
-#&gt; 15                                                                  Housing &amp; urban areas
-#&gt; 16                                                                      Roads &amp; railroads
-#&gt;                                                                 stresses
-#&gt; 1                     Ecosystem degradation, Ecosystem conversion, Other
-#&gt; 2                     Ecosystem degradation, Ecosystem conversion, Other
-#&gt; 3                                                  Ecosystem degradation
-#&gt; 4                                                  Ecosystem degradation
-#&gt; 5                            Ecosystem degradation, Ecosystem conversion
-#&gt; 6                                                  Ecosystem degradation
-#&gt; 7                            Ecosystem degradation, Ecosystem conversion
-#&gt; 8                                                      Species mortality
-#&gt; 9                                                  Ecosystem degradation
-#&gt; 10                                                 Ecosystem degradation
-#&gt; 11                   Ecosystem degradation, Reduced reproductive success
-#&gt; 12                                                     Species mortality
-#&gt; 13                           Ecosystem degradation, Ecosystem conversion
-#&gt; 14                           Ecosystem degradation, Ecosystem conversion
-#&gt; 15 Ecosystem degradation, Ecosystem conversion, Species mortality, Other
-#&gt; 16                                                     Species mortality
-#&gt;                                                      timing
-#&gt; 1                                 Agriculture &amp; aquaculture
-#&gt; 2                                 Agriculture &amp; aquaculture
-#&gt; 3                                   Biological resource use
-#&gt; 4                           Climate change &amp; severe weather
-#&gt; 5                           Climate change &amp; severe weather
-#&gt; 6                           Climate change &amp; severe weather
-#&gt; 7  Invasive and other problematic species, genes &amp; diseases
-#&gt; 8  Invasive and other problematic species, genes &amp; diseases
-#&gt; 9  Invasive and other problematic species, genes &amp; diseases
-#&gt; 10 Invasive and other problematic species, genes &amp; diseases
-#&gt; 11 Invasive and other problematic species, genes &amp; diseases
-#&gt; 12 Invasive and other problematic species, genes &amp; diseases
-#&gt; 13                             Natural system modifications
-#&gt; 14                             Natural system modifications
-#&gt; 15                     Residential &amp; commercial development
-#&gt; 16                       Transportation &amp; service corridors
-#&gt;                                                                                     scope
-#&gt; 1                             Annual &amp; perennial non-timber crops - Agro-industry farming
-#&gt; 2                              Annual &amp; perennial non-timber crops - Small-holder farming
-#&gt; 3  Logging &amp; wood harvesting - Unintentional effects: (subsistence/small scale) [harvest]
-#&gt; 4                                                                                Droughts
-#&gt; 5                                                           Habitat shifting &amp; alteration
-#&gt; 6                                                                       Storms &amp; flooding
-#&gt; 7                                 Invasive non-native/alien species/diseases - Sus scrofa
-#&gt; 8                        Invasive non-native/alien species/diseases - Unspecified species
-#&gt; 9                            Problematic native species/diseases - Dendroctonus frontalis
-#&gt; 10                           Problematic native species/diseases - Odocoileus virginianus
-#&gt; 11                              Problematic native species/diseases - Unspecified species
-#&gt; 12                    Problematic species/disease of unknown origin - Unspecified species
-#&gt; 13                                     Fire &amp; fire suppression - Trend Unknown/Unrecorded
-#&gt; 14                                                          Other ecosystem modifications
-#&gt; 15                                                                  Housing &amp; urban areas
-#&gt; 16                                                                      Roads &amp; railroads
-#&gt;    severity  impact
-#&gt; 1   Ongoing Ongoing
-#&gt; 2   Ongoing Ongoing
-#&gt; 3   Ongoing Ongoing
-#&gt; 4   Ongoing Ongoing
-#&gt; 5    Future  Future
-#&gt; 6   Ongoing Ongoing
-#&gt; 7   Ongoing Ongoing
-#&gt; 8   Ongoing Ongoing
-#&gt; 9   Ongoing Ongoing
-#&gt; 10  Ongoing Ongoing
-#&gt; 11  Ongoing Ongoing
-#&gt; 12  Ongoing Ongoing
-#&gt; 13  Ongoing Ongoing
-#&gt; 14   Future  Future
-#&gt; 15  Ongoing Ongoing
-#&gt; 16  Ongoing Ongoing
-</code></pre>
+
+
+<!-- code folding -->
+
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    script.src  = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
 
 </body>
-
 </html>
