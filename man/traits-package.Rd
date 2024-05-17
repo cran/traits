@@ -25,6 +25,15 @@ http://www.ncbi.nlm.nih.gov/ - \code{ncbi_}
 
 See also \link{traits-defunct}
 }
+\seealso{
+Useful links:
+\itemize{
+  \item \url{https://docs.ropensci.org/traits/}
+  \item \url{https://github.com/ropensci/traits}
+  \item Report bugs at \url{https://github.com/ropensci/traits/issues}
+}
+
+}
 \author{
 Scott Chamberlain
 
@@ -38,4 +47,5 @@ David Harris
 
 Rupert Collins
 }
+\keyword{internal}
 \keyword{package}
